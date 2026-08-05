@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARENA // Mobile Apps Submission Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="scanlines"></div>
+<div class="ember-field" id="emberField"></div>
+
+<div class="hud">
+  <div class="hud-inner">
+    <span class="hud-label mono">HP</span>
+    <div class="hud-bar-track"><div class="hud-bar-fill" id="hudFill"></div></div>
+    <nav class="hud-nav">
+      <button data-target="home" class="active">Home</button>
+      <button data-target="about">About</button>
+      <button data-target="team">Team</button>
+      <button data-target="jobsheets">Jobsheets</button>
+    </nav>
+    <span class="hud-clock mono" id="liveClock">--- -- ---- • --:--:--</span>
+  </div>
+</div>
+
+<section id="home">
+  <div class="vs-bg-text">VS</div>
+  <div class="eyebrow mono">MOBILE APPS ARENA // ROUND 1</div>
+  <h1 class="hero-title">
+    PICK YOUR <span class="accent">FIGHTER</span>.<br>
+    SHIP THE <span class="ice">APP</span>.<br>
+    WIN THE ROUND.
+  </h1>
+  <p class="hero-sub">
+    Submission portal for the Mobile Application Development jobsheets.
+    Every jobsheet is a round — check the log, track the team, and push
+    the build to GitHub before the timer runs out.
+  </p>
+  <div class="hero-ctas">
+    <button class="btn btn-primary" onclick="document.getElementById('team').scrollIntoView({behavior:'smooth'})">View Team →</button>
+    <button class="btn btn-ghost" onclick="document.getElementById('jobsheets').scrollIntoView({behavior:'smooth'})">Jobsheet Log</button>
+  </div>
+  <div class="round-flash mono">STATUS: <span>READY</span> // SCROLL TO START</div>
+</section>
+
+<section id="about">
+  <div class="sec-head">
+    <span class="sec-num mono">01</span>
+    <h2 class="sec-title">ABOUT US</h2>
+    <div class="sec-rule"></div>
+  </div>
+  <div class="about-grid">
+    <div class="fighter-card">
+      <h3>FIGHTER PROFILE</h3>
+      <p>A Mobile App Development squad — every jobsheet, repo, and submission lives in one arena instead of scattered across group chats.</p>
+      <div class="stat-row">
+        <div class="stat-label"><span>Flutter / Dart</span><span class="stat-value" contenteditable="true" data-key="flutter">85</span></div>
+        <div class="stat-track"><div class="stat-fill" data-key="flutter" data-value="85"></div></div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-label"><span>UI / UX Design</span><span class="stat-value" contenteditable="true" data-key="uiux">78</span></div>
+        <div class="stat-track"><div class="stat-fill" data-key="uiux" data-value="78"></div></div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-label"><span>API Integration</span><span class="stat-value" contenteditable="true" data-key="api">72</span></div>
+        <div class="stat-track"><div class="stat-fill" data-key="api" data-value="72"></div></div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-label"><span>Deadline Management</span><span class="stat-value" contenteditable="true" data-key="deadline">60</span></div>
+        <div class="stat-track"><div class="stat-fill" data-key="deadline" data-value="60"></div></div>
+      </div>
+    </div>
+    <div class="about-copy">
+      <p><strong>Why this exists.</strong> Mobile Application Development jobsheets pile up fast — one link here, a zip file there. This site pulls every submission, the team, and the GitHub log into a single arena.</p>
+      <p>The design borrows from fighting games: the HUD health bar doubles as scroll progress, the Team section plays like a character-select screen, and the Jobsheet Log reads like a hit list. Same submission tracking, just more fun to check.</p>
+      <div class="tag-row">
+        <span class="tag">Flutter</span>
+        <span class="tag">Dart</span>
+        <span class="tag">Firebase</span>
+        <span class="tag">TVETMARA Lumut</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="team">
+  <div class="sec-head">
+    <span class="sec-num mono">02</span>
+    <h2 class="sec-title">CHARACTER SELECT</h2>
+    <div class="sec-rule"></div>
+  </div>
+  <div class="select-grid two-fighters">
+    <div class="char-card" data-select>
+      <div class="card-inner">
+        <div class="card-front">
+          <div class="char-portrait has-photo"><img src="zakri-portrait.png" alt="Ahmad Zakri"></div>
+          <div class="char-body">
+            <div class="char-name">Ahmad Zakri</div>
+            <span class="char-role">SOFTWARE DEVELOPER</span>
+            <div class="char-move">Special move: <b>Layout Rush</b> — screens and widgets built out fast, holds the combo through last-minute deadlines.</div>
+          </div>
+        </div>
+        <div class="card-back">
+          <div class="back-label mono">CONTACT US</div>
+          <div class="back-name">Ahmad Zakri</div>
+          <p class="back-desc">Handles the front-end and UI for this project. Reach out for jobsheet questions, bug reports, or just to say hi.</p>
+          <div class="back-contact mono">
+            <div>✉ zakri@example.com</div>
+            <div>⌨ github.com/your-username</div>
+            <div>✈ t.me/yourhandle</div>
+          </div>
+          <div class="back-hint mono">TAP TO FLIP BACK</div>
+        </div>
+      </div>
+    </div>
+    <div class="vs-divider">VS</div>
+    <div class="char-card" data-select>
+      <div class="card-inner">
+        <div class="card-front">
+          <div class="char-portrait has-photo"><img src="redza-portrait.png" alt="Shah Redza"></div>
+          <div class="char-body">
+            <div class="char-name">Shah Redza</div>
+            <span class="char-role">SOFTWARE DEVELOPER</span>
+            <div class="char-move">Special move: <b>Script Barrage</b> — clears bugs and wires up app logic and API calls.</div>
+          </div>
+        </div>
+        <div class="card-back">
+          <div class="back-label mono">CONTACT US</div>
+          <div class="back-name">Shah Redza</div>
+          <p class="back-desc">Handles the logic, bug fixes, and API wiring for this project. Reach out for jobsheet questions, bug reports, or just to say hi.</p>
+          <div class="back-contact mono">
+            <div>✉ redza@example.com</div>
+            <div>⌨ github.com/your-username</div>
+            <div>✈ t.me/yourhandle</div>
+          </div>
+          <div class="back-hint mono">TAP TO FLIP BACK</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="jobsheets">
+  <div class="sec-head">
+    <span class="sec-num mono">03</span>
+    <h2 class="sec-title">JOBSHEET LOG</h2>
+    <div class="sec-rule"></div>
+  </div>
+  <p class="log-intro">Same repo, separate folders. Pick a fighter to enter their 24 jobsheets.</p>
+
+  <div class="jobsheet-select-screen" id="jobsheetSelectScreen">
+    <div class="jobsheet-select-card" data-select data-target="zakri">
+      <div class="select-portrait">AZ</div>
+      <div class="select-p">P1</div>
+      <div class="select-name">AHMAD ZAKRI</div>
+      <div class="select-sub mono">24 JOBSHEETS</div>
+      <div class="select-progress mono" id="selectProgress-zakri">0 / 24 · 0%</div>
+      <div class="select-cta mono">PRESS TO ENTER →</div>
+    </div>
+    <div class="jobsheet-select-card" data-select data-target="redza">
+      <div class="select-portrait">SR</div>
+      <div class="select-p">P2</div>
+      <div class="select-name">SHAH REDZA</div>
+      <div class="select-sub mono">24 JOBSHEETS</div>
+      <div class="select-progress mono" id="selectProgress-redza">0 / 24 · 0%</div>
+      <div class="select-cta mono">PRESS TO ENTER →</div>
+    </div>
+  </div>
+
+  <div class="player-log hidden" id="log-zakri">
+    <button class="back-btn" data-back>← Back to Select</button>
+    <div class="repo-banner">
+      <div>
+        <div class="repo-label mono">P1 · AHMAD ZAKRI · 24 JOBSHEETS</div>
+        <div class="repo-link mono" id="repoLinkText-zakri">—</div>
+        <div class="progress-wrap">
+          <div class="progress-track"><div class="progress-fill" id="progressFill-zakri" style="width:0%"></div></div>
+          <span class="progress-pct mono" id="progressPct-zakri">0 / 24 · 0%</span>
+        </div>
+      </div>
+      <a class="repo-open" id="repoOpenBtn-zakri" href="#" target="_blank" rel="noopener">Open Folder →</a>
+    </div>
+    <div class="jobsheet-grid" id="jobsheetGrid-zakri"></div>
+  </div>
+
+  <div class="player-log hidden" id="log-redza">
+    <button class="back-btn" data-back>← Back to Select</button>
+    <div class="repo-banner">
+      <div>
+        <div class="repo-label mono">P2 · SHAH REDZA · 24 JOBSHEETS</div>
+        <div class="repo-link mono" id="repoLinkText-redza">—</div>
+        <div class="progress-wrap">
+          <div class="progress-track"><div class="progress-fill" id="progressFill-redza" style="width:0%"></div></div>
+          <span class="progress-pct mono" id="progressPct-redza">0 / 24 · 0%</span>
+        </div>
+      </div>
+      <a class="repo-open" id="repoOpenBtn-redza" href="#" target="_blank" rel="noopener">Open Folder →</a>
+    </div>
+    <div class="jobsheet-grid" id="jobsheetGrid-redza"></div>
+  </div>
+</section>
+
+<footer>
+  © 2026 MOBILE APPS ARENA — Built by <span class="flame-text">Ahmad Zakri</span> & <span class="flame-text">Shah Redza</span> // Diploma in Computer Technology, TVETMARA Lumut
+</footer>
+
+<!--
+  BACKGROUND MUSIC: place your own audio file (something you have the rights
+  to use — an original track or a royalty-free chiptune/synth loop fits the
+  arena theme well) in the same folder as this HTML file, named "bg-music.mp3".
+  Or change the src below to point to your own filename.
+  (A few common accidental filenames are listed as fallbacks below too —
+  if your file uploader appends ".mpeg" automatically, it'll still be found.)
+-->
+<audio id="bgMusic" loop preload="none">
+  <source src="bg-music.mp3" type="audio/mpeg">
+  <source src="bg-music.mp3.mpeg" type="audio/mpeg">
+  <source src="bg-music.mpeg" type="audio/mpeg">
+</audio>
+<button class="music-toggle" id="musicToggle" aria-label="Play background music">
+  <span class="music-label mono" id="musicLabel">PLAY MUSIC</span>
+  <span id="musicIcon">♪</span>
+</button>
+
+<script src="script.js"></script>
+
+
+</body>
+</html>
