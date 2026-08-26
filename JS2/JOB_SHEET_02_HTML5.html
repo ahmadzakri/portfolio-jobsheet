@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JOB SHEET 02: HTML5</title>
+<style>
+:root{--bg:#0b1020;--panel:#121a2e;--panel2:#18233d;--line:#293653;--text:#eef4ff;--muted:#9eacc8;--accent:#6ea8fe;--accent2:#8b5cf6;--success:#35d07f;--danger:#ff6b7a}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Inter,Segoe UI,Arial,sans-serif;background:radial-gradient(circle at top right,#1d2b52 0,#0b1020 45%);color:var(--text)}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
+.topbar{min-height:72px;display:flex;align-items:center;justify-content:space-between;padding:10px 24px;border-bottom:1px solid var(--line);background:rgba(9,14,29,.96);position:sticky;top:0;z-index:20;backdrop-filter:blur(12px)}
+.brand{display:flex;align-items:center;gap:12px;font-weight:800}.logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--accent2),var(--accent));display:grid;place-items:center;font-size:19px;box-shadow:0 8px 25px #0005}.brand small{display:block;color:var(--muted);font-weight:500;margin-top:2px}
+.student{display:flex;gap:10px;align-items:center;color:var(--muted);font-size:14px}.student input,.setselect{background:#0e1629;border:1px solid var(--line);border-radius:9px;color:var(--text);padding:9px 11px;outline:none}.setselect{min-width:310px;cursor:pointer}
+.app{display:grid;grid-template-columns:380px minmax(430px,1fr) minmax(430px,1.05fr);gap:14px;padding:14px;max-width:1900px;margin:auto}
+.panel{background:rgba(18,26,46,.93);border:1px solid var(--line);border-radius:15px;overflow:hidden;min-width:0}.panel-head{padding:15px 17px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}.panel-head h2{font-size:15px;margin:0}.badge{font-size:11px;padding:5px 8px;border-radius:999px;background:#263552;color:#c9d7f4}
+.instructions{padding:17px;max-height:calc(100vh - 100px);overflow:auto}.instructions h1{font-size:23px;margin:0 0 8px}.instructions h3{font-size:13px;color:#cbd8f2;margin:20px 0 8px;text-transform:uppercase;letter-spacing:.08em}.instructions p,.instructions li{font-size:13px;line-height:1.6;color:#b9c5dc}.instructions ul{padding-left:21px}.req{display:flex;justify-content:space-between;gap:8px;padding:9px 10px;background:#0d1528;border:1px solid #202d49;border-radius:9px;margin:6px 0;font-size:12px;color:#b9c5dc}.req b{color:#fff;font-weight:600}.setbar{padding:10px 14px;border-bottom:1px solid var(--line);background:#10182b;display:flex;gap:8px;align-items:center;flex-wrap:wrap}.setbar label{font-size:11px;color:var(--muted)}
+.taskbox{background:#0d1528;border:1px solid #293653;border-radius:10px;padding:12px;margin-top:10px}.taskbox li{margin:5px 0}.taskbox code{color:#bfe0ff;word-break:break-all}
+.submission{margin-top:15px;padding:14px;background:#0d1528;border:1px solid #293653;border-radius:12px}.submission h3{margin-top:0}.submission p{margin:7px 0;font-size:12px}.submission strong{color:#fff}.lecturer{margin-top:12px;padding-top:12px;border-top:1px solid #293653}
+.editor-wrap,.output-wrap{height:calc(100vh - 158px);min-height:560px;display:flex;flex-direction:column}.editor{flex:1;display:flex;overflow:hidden;background:#080d19}.gutter{width:47px;overflow:hidden;background:#0b1222;color:#53627e;text-align:right;padding:14px 10px 14px 0;font:13px/1.7 Consolas,monospace;user-select:none}
+textarea#code{flex:1;resize:none;border:0;outline:0;background:#080d19;color:#d9e7ff;padding:14px 16px;font:13px/1.7 Consolas,Monaco,monospace;white-space:pre;overflow:auto;tab-size:2}
+.toolbar{padding:12px;display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid var(--line);background:#10182b}.btn{border:1px solid #344563;background:#1b2944;color:#eaf2ff;border-radius:9px;padding:9px 13px;font-weight:700;font-size:12px}.btn:hover{filter:brightness(1.15)}.primary{background:linear-gradient(135deg,#5b7cfa,#7958e8);border:0}.success{background:#164b34;border-color:#267b54}.telegram{background:#168acd;border-color:#31a8ef}.print{background:#4c3f15;border-color:#8b7528}.danger{background:#4b1e2a;border-color:#743041}
+.preview{flex:1;background:white;overflow:auto}.preview iframe{width:100%;height:100%;min-height:480px;border:0;display:block}.status{padding:11px 14px;border-top:1px solid var(--line);background:#10182b;font-size:12px;color:var(--muted)}.checks{padding:10px 14px;border-top:1px solid var(--line);max-height:180px;overflow:auto}.checkrow{display:flex;align-items:center;gap:8px;font-size:11px;padding:4px 0;color:#b8c5dd}.checkrow .dot{width:8px;height:8px;border-radius:50%;background:#65738d}.checkrow.pass .dot{background:var(--success)}.checkrow.fail .dot{background:var(--danger)}
+.modal{position:fixed;inset:0;background:#020611d9;display:none;align-items:center;justify-content:center;z-index:50;padding:20px}.modal.show{display:flex}.modal-card{width:min(1100px,96vw);height:min(820px,92vh);background:#111a2e;border:1px solid var(--line);border-radius:16px;display:flex;flex-direction:column;overflow:hidden}.modal-card iframe{flex:1;border:0;background:#fff}.modal-head{padding:13px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line)}
+.warning{position:fixed;inset:0;background:#050912;color:white;display:none;z-index:999;align-items:center;justify-content:center;text-align:center;padding:30px}.warning.show{display:flex}.warning-box{max-width:600px;background:#111a2e;border:1px solid #344563;padding:30px;border-radius:18px}
+.protected{user-select:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none}
+@media(max-width:1250px){.app{grid-template-columns:330px 1fr}.output-panel{grid-column:1/-1}.output-wrap{height:620px}}
+@media(max-width:800px){.app{grid-template-columns:1fr}.editor-wrap,.output-wrap{height:650px}.student input{width:140px}.topbar{padding:10px 12px;flex-wrap:wrap;gap:10px}.setselect{min-width:220px}}
+@media print{body *{visibility:hidden}#printArea,#printArea *{visibility:visible}#printArea{position:absolute;left:0;top:0;width:100%;background:white;color:#111;padding:25px}}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="logo">&lt;/&gt;</div>
+    <div>JOB SHEET 02: HTML5<small>PRACTICAL MOBILE APPLICATION DEVELOPMENT</small></div>
+  </div>
+  <div class="student">Student Name <input id="studentName" placeholder="Enter your name" autocomplete="off"></div>
+</header>
+
+<main class="app">
+
+<section class="panel protected" id="questionPanel">
+  <div class="panel-head"><h2>Task Instructions</h2><span class="badge" id="taskBadge">SET 1</span></div>
+  <div class="setbar">
+    <label>QUESTION SET</label>
+    <select id="setSelect" class="setselect"></select>
+  </div>
+  <div class="instructions">
+    <h1 id="title"></h1>
+    <p><b>Task:</b> Write the HTML codes to create the web page shown in the Job Sheet 2 task.</p>
+
+    <h3>Task Requirements</h3>
+    <div class="taskbox"><ul id="taskList"></ul></div>
+
+    <h3>Assessment Checklist</h3>
+    <div id="requirements"></div>
+
+    <div class="submission">
+      <h3>Submission Information</h3>
+      <p>Student: <strong id="submissionStudent">Not entered</strong></p>
+      <p>Question Set: <strong id="submissionSet">Set 1</strong></p>
+      <p>Task: <strong id="submissionTask"></strong></p>
+      <p>Validation: <strong id="submissionValidation">Not checked</strong></p>
+      <p>Lecturer Telegram: <strong>+60189577991</strong></p>
+      <div class="lecturer">
+        <h3>LECTURER DETAILS</h3>
+        <p><strong>MOHD SHUKRI BIN MUHAMAD HUSIN</strong></p>
+        <p>Diploma in Computer Technology (Big Data)<br>TVETMARA Lumut</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="panel-head"><h2>HTML Code Editor</h2><span class="badge">Student Workspace</span></div>
+  <div class="editor-wrap">
+    <div class="editor">
+      <div class="gutter" id="gutter">1</div>
+      <textarea id="code" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" aria-label="HTML code editor" placeholder="Type your HTML5 code here..."></textarea>
+    </div>
+    <div class="toolbar">
+      <button class="btn primary" id="viewBtn">▶ VIEW OUTPUT</button>
+      <button class="btn success" id="checkBtn">✓ CHECK CODE</button>
+      <button class="btn" id="templateBtn">＋ INSERT STARTER</button>
+      <button class="btn" id="fullscreenBtn">⛶ FULL SCREEN</button>
+      <button class="btn print" id="printBtn">🖨 PRINT OUTPUT</button>
+      <button class="btn telegram" id="telegramBtn">📤 SUBMIT VIA TELEGRAM</button>
+      <button class="btn danger" id="clearBtn">CLEAR</button>
+    </div>
+    <div class="status" id="editorStatus">Ready.</div>
+  </div>
+</section>
+
+<section class="panel output-panel">
+  <div class="panel-head"><h2>Rendered Output</h2><span class="badge">Live Preview</span></div>
+  <div class="output-wrap">
+    <div class="preview"><iframe id="preview" sandbox="allow-scripts allow-forms"></iframe></div>
+    <div class="checks" id="checks"><div class="checkrow"><span class="dot"></span>Click <b>CHECK CODE</b> to validate the selected question set.</div></div>
+  </div>
+</section>
+</main>
+
+<div class="modal" id="modal">
+  <div class="modal-card">
+    <div class="modal-head"><b>Full Screen Output</b><button class="btn" id="closeModal">CLOSE</button></div>
+    <iframe id="fullPreview" sandbox="allow-scripts allow-forms"></iframe>
+  </div>
+</div>
+
+<div class="warning" id="warning">
+  <div class="warning-box">
+    <h2>Assessment Protection</h2>
+    <p>Please return to the assessment page.</p>
+    <p>The question set is protected against normal copying, text selection and right-click actions.</p>
+    <button class="btn primary" onclick="closeWarning()">RETURN TO LAB</button>
+  </div>
+</div>
+
+<div id="printArea"></div>
+
+<script>
+const DATA = [
+{title:"Latest Smartphones",width:1100,brands:["Samsung","Huawei"],videos:["https://www.youtube.com/embed/PCFIDrpsErs","https://www.youtube.com/embed/GZ9HKeUJbsw"],sites:["http://www.samsung.com/my/","http://consumer.huawei.com/my/"],videoSize:"360px × 215px",cols:["Video: 400px","Specification: 250px","Information: 450px"],extra:"Adjust the width if necessary."},
+{title:"Latest Laptops",width:1050,brands:["Dell","HP"],videos:["https://www.youtube.com/embed/6Hk0K8J8v4A","https://www.youtube.com/embed/4F2B9pM8w9Q"],sites:["https://www.dell.com/en-my","https://www.hp.com/my-en/"],videoSize:"350px × 210px",cols:["Video: 380px","Specification: 270px","Information: 400px"]},
+{title:"Digital Cameras",width:1080,brands:["Canon","Nikon"],videos:["https://www.youtube.com/embed/3Z9D7kL2pXQ","https://www.youtube.com/embed/8M4L6vR3sTQ"],sites:["https://www.canon.com.my/","https://www.nikon-asia.com/"],videoSize:"360px × 210px",cols:["Video: 390px","Specification: 240px","Information: 450px"]},
+{title:"Smartwatch Collection",width:1000,brands:["Apple Watch","Garmin"],videos:["https://www.youtube.com/embed/2K7mQ5L8nYw","https://www.youtube.com/embed/9P3R6T1vXkM"],sites:["https://www.apple.com/my/watch/","https://www.garmin.com/en-MY/"],videoSize:"340px × 205px",cols:["Video: 360px","Specification: 260px","Information: 380px"]},
+{title:"Home Appliances",width:1120,brands:["Panasonic","LG"],videos:["https://www.youtube.com/embed/5N8K2mR7pQw","https://www.youtube.com/embed/7X4L9vB2sTc"],sites:["https://www.panasonic.com/my/","https://www.lg.com/my"],videoSize:"370px × 215px",cols:["Video: 400px","Specification: 260px","Information: 460px"]},
+{title:"Gaming Consoles",width:1060,brands:["PlayStation","Xbox"],videos:["https://www.youtube.com/embed/4J6M8Q2pRtY","https://www.youtube.com/embed/8R3K5L1vWxP"],sites:["https://www.playstation.com/en-my/","https://www.xbox.com/en-MY"],videoSize:"360px × 210px",cols:["Video: 380px","Specification: 250px","Information: 430px"]},
+{title:"Electric Cars",width:1100,brands:["Tesla","BYD"],videos:["https://www.youtube.com/embed/1A5C9K3mQwR","https://www.youtube.com/embed/6V2P8L4sXtN"],sites:["https://www.tesla.com/","https://www.byd.com/"],videoSize:"360px × 215px",cols:["Video: 400px","Specification: 250px","Information: 450px"]},
+{title:"Audio Equipment",width:1040,brands:["Sony","JBL"],videos:["https://www.youtube.com/embed/2F7K5M9pLxQ","https://www.youtube.com/embed/8T3R6V1sQwM"],sites:["https://www.sony.com.my/","https://www.jbl.com.my/"],videoSize:"350px × 210px",cols:["Video: 370px","Specification: 260px","Information: 410px"]},
+{title:"Fitness Trackers",width:1090,brands:["Fitbit","Xiaomi"],videos:["https://www.youtube.com/embed/3L8Q1M6rPwT","https://www.youtube.com/embed/7K2V9N4sXcP"],sites:["https://www.fitbit.com/","https://www.mi.com/my/"],videoSize:"360px × 215px",cols:["Video: 390px","Specification: 250px","Information: 450px"]},
+{title:"Digital Tablets",width:1070,brands:["Apple iPad","Samsung Galaxy Tab"],videos:["https://www.youtube.com/embed/5Q8L2R6mVxK","https://www.youtube.com/embed/9M3P7K1sWqT"],sites:["https://www.apple.com/my/ipad/","https://www.samsung.com/my/tablets/"],videoSize:"360px × 210px",cols:["Video: 390px","Specification: 260px","Information: 420px"]},
+{title:"Modern Printers",width:1020,brands:["Canon","Epson"],videos:["https://www.youtube.com/embed/4R7M2L9pXcQ","https://www.youtube.com/embed/8K3V5T1sWqN"],sites:["https://www.canon.com.my/","https://www.epson.com.my/"],videoSize:"350px × 205px",cols:["Video: 370px","Specification: 250px","Information: 400px"]},
+{title:"Home Entertainment Systems",width:1110,brands:["Sony","LG"],videos:["https://www.youtube.com/embed/6P2K8M4rVxQ","https://www.youtube.com/embed/1L7Q3T9sWkM"],sites:["https://www.sony.com.my/","https://www.lg.com/my"],videoSize:"370px × 215px",cols:["Video: 400px","Specification: 260px","Information: 450px"]},
+{title:"Computer Monitors",width:1060,brands:["Dell","Acer"],videos:["https://www.youtube.com/embed/3Q7L5R2mKxP","https://www.youtube.com/embed/8V1T6P4sWqN"],sites:["https://www.dell.com/en-my","https://www.acer.com/my-en"],videoSize:"360px × 210px",cols:["Video: 380px","Specification: 250px","Information: 430px"]},
+{title:"Wireless Headphones",width:1030,brands:["Sony","Bose"],videos:["https://www.youtube.com/embed/2M6K9R3pLxQ","https://www.youtube.com/embed/7P4V1T8sQwM"],sites:["https://www.sony.com.my/","https://www.bose.com/"],videoSize:"350px × 210px",cols:["Video: 380px","Specification: 250px","Information: 400px"]},
+{title:"Digital Cameras for Beginners",width:1090,brands:["Sony","Fujifilm"],videos:["https://www.youtube.com/embed/4K8M2L7rPxQ","https://www.youtube.com/embed/9T3V5Q1sWkN"],sites:["https://www.sony.com.my/","https://www.fujifilm.com/my/en"],videoSize:"360px × 215px",cols:["Video: 390px","Specification: 250px","Information: 450px"]},
+{title:"Smart Home Devices",width:1080,brands:["Google Nest","Amazon Echo"],videos:["https://www.youtube.com/embed/5R1K7M3pLxQ","https://www.youtube.com/embed/8Q4V2T9sWkM"],sites:["https://store.google.com/","https://www.amazon.com/"],videoSize:"360px × 210px",cols:["Video: 390px","Specification: 250px","Information: 440px"]},
+{title:"Robot Vacuum Cleaners",width:1050,brands:["Roborock","iRobot"],videos:["https://www.youtube.com/embed/6M2P8R4kLxQ","https://www.youtube.com/embed/1V7T3Q9sWkN"],sites:["https://global.roborock.com/","https://www.irobot.com/"],videoSize:"350px × 210px",cols:["Video: 380px","Specification: 260px","Information: 410px"]},
+{title:"Smart TV Comparison",width:1100,brands:["Samsung","Sony"],videos:["https://www.youtube.com/embed/3K7M2Q8pLxR","https://www.youtube.com/embed/9R4T1V6sWkP"],sites:["https://www.samsung.com/my/tvs/","https://www.sony.com.my/electronics/televisions"],videoSize:"360px × 215px",cols:["Video: 400px","Specification: 250px","Information: 450px"]},
+{title:"Mobile Accessories",width:1010,brands:["Anker","Belkin"],videos:["https://www.youtube.com/embed/7L3K8M1pQxV","https://www.youtube.com/embed/4T9R2V6sWkN"],sites:["https://www.anker.com/","https://www.belkin.com/"],videoSize:"340px × 205px",cols:["Video: 370px","Specification: 250px","Information: 390px"]},
+{title:"Future Technology",width:1130,brands:["Artificial Intelligence","Robotics"],videos:["https://www.youtube.com/embed/2P6K9M4rLxQ","https://www.youtube.com/embed/8V3T1Q7sWkN"],sites:["https://www.ibm.com/artificial-intelligence","https://www.robotics.org/"],videoSize:"370px × 215px",cols:["Video: 410px","Specification: 260px","Information: 460px"]}
+];
+
+const code=document.getElementById("code"),preview=document.getElementById("preview"),fullPreview=document.getElementById("fullPreview"),gutter=document.getElementById("gutter"),status=document.getElementById("editorStatus"),checks=document.getElementById("checks"),requirements=document.getElementById("requirements"),modal=document.getElementById("modal"),setSelect=document.getElementById("setSelect"),studentName=document.getElementById("studentName");
+
+DATA.forEach((s,i)=>{const o=document.createElement("option");o.value=i;o.textContent=`Set ${i+1} – ${s.title}`;setSelect.appendChild(o)});
+
+function current(){return DATA[Number(setSelect.value)]}
+function escapeHTML(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
+function escapeReg(s){return String(s).replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}
+function updateSubmissionInfo(){const s=current();document.getElementById("submissionStudent").textContent=studentName.value.trim()||"Not entered";document.getElementById("submissionSet").textContent=`Set ${Number(setSelect.value)+1}`;document.getElementById("submissionTask").textContent=s.title}
+
+studentName.value=localStorage.getItem("htmlLabStudentName")||"";
+studentName.addEventListener("input",()=>{localStorage.setItem("htmlLabStudentName",studentName.value);updateSubmissionInfo()});
+
+function renderInstructions(){
+  const s=current(), n=Number(setSelect.value)+1;
+  document.getElementById("taskBadge").textContent=`SET ${n}`;
+  document.getElementById("title").textContent=s.title;
+  document.getElementById("taskList").innerHTML=`
+    <li>Write the HTML codes to create the web page shown in Job Sheet 2.</li>
+    <li>The webpage title is <b>${escapeHTML(s.title)}</b>.</li>
+    <li>The table width is <b>${s.width}px</b>.${s.extra?" "+escapeHTML(s.extra):""}</li>
+    <li>Create a table comparing <b>${escapeHTML(s.brands[0])}</b> and <b>${escapeHTML(s.brands[1])}</b>.</li>
+    <li>Use <b>rowspan</b> and <b>colspan</b> to organize the table.</li>
+    <li>${escapeHTML(s.brands[0])} YouTube video: <code>${escapeHTML(s.videos[0])}</code></li>
+    <li>${escapeHTML(s.brands[0])} website: <code>${escapeHTML(s.sites[0])}</code></li>
+    <li>${escapeHTML(s.brands[1])} YouTube video: <code>${escapeHTML(s.videos[1])}</code></li>
+    <li>${escapeHTML(s.brands[1])} website: <code>${escapeHTML(s.sites[1])}</code></li>
+    <li>Video dimensions: <b>${escapeHTML(s.videoSize)}</b>.</li>
+    <li>Column widths: <b>${escapeHTML(s.cols.join(" | "))}</b>.</li>
+    <li>Add a suitable <b>Heading Level 2</b>.</li>`;
+  createRequirements();updateSubmissionInfo();loadDraft();
+}
+function createRequirements(){
+ const s=current();
+ const items=["HTML5 document structure",`Page title: ${s.title}`,`Table width: ${s.width}px`,`Both brands: ${s.brands.join(" and ")}`,"rowspan attribute","colspan attribute",`YouTube video: ${s.brands[0]}`,`YouTube video: ${s.brands[1]}`,`Website link: ${s.brands[0]}`,`Website link: ${s.brands[1]}`,`Video size: ${s.videoSize}`,...s.cols,"Heading Level 2"];
+ requirements.innerHTML=items.map(x=>`<div class="req"><b>${escapeHTML(x)}</b><span>Required</span></div>`).join("");
+}
+function starter(){
+ const s=current();
+ return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${s.title}</title>
+<style>
+table{width:${s.width}px;border-collapse:collapse;font-family:Arial,sans-serif}
+th,td{border:1px solid #333;padding:10px;vertical-align:top}
+th{background:#d9eaf7}
+video,iframe{display:block}
+</style>
+</head>
+<body>
+<h2>${s.title}</h2>
+<table border="1">
+<tr>
+<th colspan="3">${s.brands[0]} and ${s.brands[1]}</th>
+</tr>
+<tr>
+<th style="width:${parseInt(s.cols[0])}px">Video</th>
+<th style="width:${parseInt(s.cols[1])}px">Specification</th>
+<th style="width:${parseInt(s.cols[2])}px">Information</th>
+</tr>
+<tr>
+<td rowspan="2"><iframe src="${s.videos[0]}" width="${parseInt(s.videoSize)}" height="${parseInt(s.videoSize.split("×")[1])}" allowfullscreen></iframe></td>
+<td><b>${s.brands[0]}</b></td>
+<td><a href="${s.sites[0]}" target="_blank">${s.brands[0]} Website</a></td>
+</tr>
+<tr>
+<td colspan="2">${s.brands[0]} information</td>
+</tr>
+<tr>
+<td rowspan="2"><iframe src="${s.videos[1]}" width="${parseInt(s.videoSize)}" height="${parseInt(s.videoSize.split("×")[1])}" allowfullscreen></iframe></td>
+<td><b>${s.brands[1]}</b></td>
+<td><a href="${s.sites[1]}" target="_blank">${s.brands[1]} Website</a></td>
+</tr>
+<tr>
+<td colspan="2">${s.brands[1]} information</td>
+</tr>
+</table>
+</body>
+</html>`;
+}
+function loadDraft(){
+ const key="htmlLab2Draft_"+setSelect.value,saved=localStorage.getItem(key);
+ code.value=saved??"";updateGutter();preview.srcdoc="";
+ status.textContent=saved?"Previous draft restored for this set.":"Ready. Enter your HTML solution.";
+ checks.innerHTML=`<div class="checkrow"><span class="dot"></span>Click <b>CHECK CODE</b> to validate this set.</div>`;
+ document.getElementById("submissionValidation").textContent="Not checked";
+}
+function updateGutter(){const n=Math.max(1,code.value.split("\n").length);gutter.innerHTML=Array.from({length:n},(_,i)=>i+1).join("<br>")}
+code.addEventListener("input",()=>{updateGutter();localStorage.setItem("htmlLab2Draft_"+setSelect.value,code.value)});
+code.addEventListener("scroll",()=>gutter.scrollTop=code.scrollTop);
+code.addEventListener("keydown",e=>{
+  if(
+    (e.ctrlKey && e.key.toLowerCase()==="v") ||
+    (e.ctrlKey && e.shiftKey && e.key.toLowerCase()==="v") ||
+    (e.metaKey && e.key.toLowerCase()==="v")
+  ){
+    e.preventDefault();
+    status.textContent="Paste is disabled. Please type your HTML code manually.";
+    return;
+  }
+
+  if(e.key==="Tab"){
+    e.preventDefault();
+    let a=code.selectionStart,b=code.selectionEnd;
+    code.value=code.value.slice(0,a)+"  "+code.value.slice(b);
+    code.selectionStart=code.selectionEnd=a+2;
+    updateGutter();
+    localStorage.setItem("htmlLab2Draft_"+setSelect.value,code.value);
+  }
+});
+
+code.addEventListener("paste",e=>{
+  e.preventDefault();
+  status.textContent="Paste is disabled. Please type your HTML code manually.";
+});
+
+code.addEventListener("drop",e=>{
+  e.preventDefault();
+  status.textContent="Drag and drop is disabled. Please type your HTML code manually.";
+});
+
+code.addEventListener("dragover",e=>e.preventDefault());
+
+code.addEventListener("contextmenu",e=>{
+  e.preventDefault();
+  status.textContent="Right-click paste is disabled. Please type your HTML code manually.";
+});
+
+function clean(h){return h.replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi,"").replace(/\son[a-z]+\s*=\s*(['"]).*?\1/gi,"").replace(/javascript\s*:/gi,"")}
+function showOutput(){
+ const src=code.value.trim();
+ if(!src){preview.srcdoc='<div style="font-family:Arial;padding:30px;color:#555"><h2>No HTML code entered</h2><p>Type your HTML code, then click <b>VIEW OUTPUT</b>.</p></div>';status.textContent="Nothing to preview.";return}
+ const s=current(),student=studentName.value.trim()||"Not entered",setNumber=Number(setSelect.value)+1;
+ const header=`<div id="labSubmissionHeader" style="font-family:Arial,sans-serif;background:#f1f5ff;border:2px solid #405de6;padding:16px;margin:0 0 25px 0;border-radius:10px"><h3 style="margin:0 0 10px;color:#243b80">LAB 2 – HTML5</h3><p><strong>Student Name:</strong> ${escapeHTML(student)}</p><p><strong>Question Set:</strong> Set ${setNumber}</p><p><strong>Task:</strong> ${escapeHTML(s.title)}</p><p><strong>Validation:</strong> ${escapeHTML(document.getElementById("submissionValidation").textContent)}</p></div>`;
+ const finalHTML=`<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{padding:20px}#labSubmissionHeader{display:block}</style></head><body>${header}${clean(src)}</body></html>`;
+ preview.srcdoc=finalHTML;fullPreview.srcdoc=finalHTML;status.textContent="Output updated successfully.";
+}
+function checkCode(){
+ const s=current(),src=code.value;
+ const tests=[
+  ["HTML5 document structure",/<!doctype\s+html/i.test(src)],
+  ["Page title",new RegExp(`<title\\b[^>]*>[\\s\\S]*?${escapeReg(s.title)}[\\s\\S]*?<\\/title>`,"i").test(src)],
+  [`Table width ${s.width}px`,new RegExp(`width\\s*[:=]\\s*["']?${s.width}px?["']?`,"i").test(src)||new RegExp(`<table\\b[^>]*width\\s*=\\s*["']?${s.width}`,"i").test(src)],
+  [`Brand: ${s.brands[0]}`,src.toLowerCase().includes(s.brands[0].toLowerCase())],
+  [`Brand: ${s.brands[1]}`,src.toLowerCase().includes(s.brands[1].toLowerCase())],
+  ["rowspan",/<\w+\b[^>]*\browspan\s*=/i.test(src)],
+  ["colspan",/<\w+\b[^>]*\bcolspan\s*=/i.test(src)],
+  [`${s.brands[0]} YouTube`,src.includes(s.videos[0])],
+  [`${s.brands[1]} YouTube`,src.includes(s.videos[1])],
+  [`${s.brands[0]} website`,src.includes(s.sites[0])],
+  [`${s.brands[1]} website`,src.includes(s.sites[1])],
+  [`Video width ${s.videoSize.split("×")[0].trim()}`,src.includes(s.videoSize.split("×")[0].trim())],
+  [`Video height ${s.videoSize.split("×")[1].trim()}`,src.includes(s.videoSize.split("×")[1].trim())],
+  ["Heading Level 2",/<h2\b[^>]*>[\s\S]*?<\/h2>/i.test(src)]
+ ];
+ const pass=tests.filter(x=>x[1]).length,percentage=Math.round(pass/tests.length*100);
+ checks.innerHTML=tests.map(x=>`<div class="checkrow ${x[1]?"pass":"fail"}"><span class="dot"></span>${x[1]?"✓":"✗"} ${escapeHTML(x[0])}</div>`).join("");
+ status.textContent=`Validation complete: ${pass}/${tests.length} requirements detected (${percentage}%).`;
+ document.getElementById("submissionValidation").textContent=`${pass}/${tests.length} (${percentage}%)`;
+ showOutput();
+}
+setSelect.addEventListener("change",renderInstructions);
+document.getElementById("viewBtn").onclick=showOutput;
+document.getElementById("checkBtn").onclick=checkCode;
+document.getElementById("templateBtn").onclick=()=>{if(code.value.trim()&&!confirm("Replace current code with the starter template?"))return;code.value=starter();updateGutter();localStorage.setItem("htmlLab2Draft_"+setSelect.value,code.value);status.textContent="Starter template inserted."};
+document.getElementById("fullscreenBtn").onclick=()=>{showOutput();modal.classList.add("show")};
+document.getElementById("closeModal").onclick=()=>modal.classList.remove("show");
+modal.addEventListener("click",e=>{if(e.target===modal)modal.classList.remove("show")});
+document.getElementById("clearBtn").onclick=()=>{if(confirm("Clear your current HTML code for this set?")){code.value="";updateGutter();localStorage.removeItem("htmlLab2Draft_"+setSelect.value);preview.srcdoc="";checks.innerHTML='<div class="checkrow"><span class="dot"></span>Code cleared.</div>';status.textContent="Editor cleared.";document.getElementById("submissionValidation").textContent="Not checked"}};
+document.getElementById("printBtn").onclick=()=>{
+ if(!code.value.trim()){alert("Please enter your HTML code first.");return}
+ showOutput();
+ const s=current(),student=studentName.value.trim()||"Not entered",validation=document.getElementById("submissionValidation").textContent;
+ const output=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>HTML5 Lab Submission</title><style>body{font-family:Arial;margin:30px;color:#111}.info{border:2px solid #333;padding:15px;margin-bottom:25px}.info p{margin:6px 0}</style></head><body><div class="info"><h2>LAB 2 – HTML5</h2><p><strong>Student Name:</strong> ${escapeHTML(student)}</p><p><strong>Question Set:</strong> Set ${Number(setSelect.value)+1}</p><p><strong>Task:</strong> ${escapeHTML(s.title)}</p><p><strong>Validation:</strong> ${escapeHTML(validation)}</p></div>${clean(code.value)}</body></html>`;
+ const w=window.open("","_blank","width=1000,height=800");if(!w){alert("Please allow pop-ups to print the output.");return}w.document.open();w.document.write(output);w.document.close();w.onload=()=>{w.focus();w.print()};
+};
+document.getElementById("telegramBtn").onclick=()=>{
+ const student=studentName.value.trim();if(!student){alert("Please enter your Student Name before submitting.");studentName.focus();return}
+ if(!code.value.trim()){alert("Please complete your HTML code before submitting.");return}
+ const s=current(),setNumber=Number(setSelect.value)+1,validation=document.getElementById("submissionValidation").textContent;
+ const message=`HTML5 LAB 2 SUBMISSION
+
+Student Name: ${student}
+Question Set: Set ${setNumber}
+Task: ${s.title}
+Validation: ${validation}
+
+Lecturer:
+MOHD SHUKRI BIN MUHAMAD HUSIN
+
+Programme:
+Diploma in Computer Technology (Big Data)
+TVETMARA Lumut
+
+Lecturer Telegram:
++60189577991
+
+Student has completed LAB 2 – HTML5.`;
+ window.open("https://t.me/+60189577991?text="+encodeURIComponent(message),"_blank","noopener,noreferrer");
+};
+
+const questionPanel=document.getElementById("questionPanel");
+questionPanel.addEventListener("contextmenu",e=>e.preventDefault());
+questionPanel.addEventListener("copy",e=>e.preventDefault());
+questionPanel.addEventListener("cut",e=>e.preventDefault());
+questionPanel.addEventListener("dragstart",e=>e.preventDefault());
+questionPanel.addEventListener("selectstart",e=>e.preventDefault());
+document.addEventListener("keydown",e=>{const a=document.activeElement,editing=a===code||a===studentName||a.tagName==="SELECT";if(!editing&&((e.ctrlKey&&e.key.toLowerCase()==="c")||(e.ctrlKey&&e.key.toLowerCase()==="u")))e.preventDefault()});
+document.addEventListener("visibilitychange",()=>{if(document.hidden)document.getElementById("warning").classList.add("show")});
+function closeWarning(){document.getElementById("warning").classList.remove("show")}
+
+setSelect.selectedIndex=0;
+renderInstructions();
+updateSubmissionInfo();
+</script>
+</body>
+</html>
