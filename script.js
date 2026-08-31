@@ -311,8 +311,8 @@ const JOBSHEET_BUCKET = "jobsheets";
 
 async function readCloudLinks(player) {
   try {
-    const response = await fetch(\`\${SUPABASE_URL}/rest/v1/jobsheets?player=eq.\${encodeURIComponent(player)}&select=round,live_url,pdf_url,file_path\`, {
-      headers: { apikey: SUPABASE_KEY, Authorization: \`Bearer \${SUPABASE_KEY}\` },
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/jobsheets?player=eq.${encodeURIComponent(player)}&select=round,live_url,pdf_url,file_path`, {
+      headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
     });
     if (!response.ok) throw new Error(await response.text());
     return await response.json();
@@ -323,11 +323,11 @@ async function readCloudLinks(player) {
 }
 
 async function saveCloudLink(player, round, data) {
-  const response = await fetch(\`\${SUPABASE_URL}/rest/v1/jobsheets?on_conflict=player,round\`, {
+  const response = await fetch(`${SUPABASE_URL}/rest/v1/jobsheets?on_conflict=player,round`, {
     method: "POST",
     headers: {
       apikey: SUPABASE_KEY,
-      Authorization: \`Bearer \${SUPABASE_KEY}\`,
+      Authorization: `Bearer ${SUPABASE_KEY}`,
       "Content-Type": "application/json",
       Prefer: "resolution=merge-duplicates,return=representation",
     },
@@ -341,19 +341,19 @@ async function uploadJobsheetPdf(player, round, file) {
   if (!file) throw new Error("Choose a PDF file first.");
   if (file.type !== "application/pdf" && !file.name.toLowerCase().endsWith(".pdf")) throw new Error("Only PDF files are allowed.");
   if (file.size > 50 * 1024 * 1024) throw new Error("PDF must be 50MB or smaller.");
-  const path = \`\${player}/jobsheet-\${String(round).padStart(2, "0")}.pdf\`;
-  const response = await fetch(\`\${SUPABASE_URL}/storage/v1/object/\${JOBSHEET_BUCKET}/\${path}\`, {
+  const path = `${player}/jobsheet-${String(round).padStart(2, "0")}.pdf`;
+  const response = await fetch(`${SUPABASE_URL}/storage/v1/object/${JOBSHEET_BUCKET}/${path}`, {
     method: "POST",
     headers: {
       apikey: SUPABASE_KEY,
-      Authorization: \`Bearer \${SUPABASE_KEY}\`,
+      Authorization: `Bearer ${SUPABASE_KEY}`,
       "Content-Type": "application/pdf",
       "x-upsert": "true",
     },
     body: file,
   });
   if (!response.ok) throw new Error(await response.text());
-  return { pdfUrl: \`\${SUPABASE_URL}/storage/v1/object/public/\${JOBSHEET_BUCKET}/\${path}\`, path };
+  return { pdfUrl: `${SUPABASE_URL}/storage/v1/object/public/${JOBSHEET_BUCKET}/${path}`, path };
 }
 
 async function initCloudPlayerLog() {
@@ -370,12 +370,12 @@ async function initCloudPlayerLog() {
     const completed = submitted.filter(Boolean).length;
     const percent = Math.round(completed / TOTAL * 100);
     document.querySelector("#playerCompleted").textContent = String(completed);
-    document.querySelector("#playerProgressBar").style.width = \`\${percent}%\`;
-    document.querySelector("#playerPercent").textContent = \`\${percent}% ROUNDS CLEARED\`;
+    document.querySelector("#playerProgressBar").style.width = `${percent}%`;
+    document.querySelector("#playerPercent").textContent = `${percent}% ROUNDS CLEARED`;
     document.querySelectorAll("[data-filter]").forEach((button) => {
       button.classList.toggle("is-active", button.dataset.filter === filter);
-      if (button.dataset.filter === "completed") button.textContent = \`CLEARED \${completed}\`;
-      if (button.dataset.filter === "pending") button.textContent = \`PENDING \${TOTAL - completed}\`;
+      if (button.dataset.filter === "completed") button.textContent = `CLEARED ${completed}`;
+      if (button.dataset.filter === "pending") button.textContent = `PENDING ${TOTAL - completed}`;
     });
     const visible = submitted.map((done, index) => ({ done, index }))
       .filter(({ done }) => filter === "all" || (filter === "completed" ? done : !done));
@@ -386,34 +386,34 @@ async function initCloudPlayerLog() {
       const live = links[index].live || record.liveUrl || "";
       const pdf = links[index].pdf || record.pdfUrl || "";
       const isFlipped = expanded === index;
-      return \`<article class="jobsheet \${done ? "is-done" : ""} \${isFlipped ? "is-flipped" : ""}">
+      return `<article class="jobsheet ${done ? "is-done" : ""} ${isFlipped ? "is-flipped" : ""}">
         <div class="job-inner">
           <div class="job-face job-front">
-            <div class="job-top"><span class="job-number">\${number}</span><span class="job-state">\${done ? "MISSION CLEARED" : "READY TO BUILD"}</span></div>
-            \${live || pdf ? '<span class="job-linked">LINKED</span>' : ""}
-            <h3>\${record.title}</h3>
-            \${done ? '<span class="job-stamp">CLEARED</span>' : ""}
+            <div class="job-top"><span class="job-number">${number}</span><span class="job-state">${done ? "MISSION CLEARED" : "READY TO BUILD"}</span></div>
+            ${live || pdf ? '<span class="job-linked">LINKED</span>' : ""}
+            <h3>${record.title}</h3>
+            ${done ? '<span class="job-stamp">CLEARED</span>' : ""}
             <div class="front-links">
-              \${live ? \`<a href="\${esc(live)}" target="_blank" rel="noreferrer">↗ VIEW LIVE</a>\` : '<span>LIVE · PENDING</span>'}
-              \${pdf ? \`<a href="\${esc(pdf)}" target="_blank" rel="noreferrer">↗ VIEW PDF</a>\` : '<span>PDF · PENDING</span>'}
+              ${live ? `<a href="${esc(live)}" target="_blank" rel="noreferrer">↗ VIEW LIVE</a>` : '<span>LIVE · PENDING</span>'}
+              ${pdf ? `<a href="${esc(pdf)}" target="_blank" rel="noreferrer">↗ VIEW PDF</a>` : '<span>PDF · PENDING</span>'}
             </div>
-            <button class="detail-toggle" data-details="\${index}" aria-expanded="\${isFlipped}">UPLOAD / EDIT <span>&#8635;</span></button>
-            <div class="job-actions"><span>ROUND \${number}</span><button data-index="\${index}">\${done ? "✓ SUBMITTED" : "MARK DONE"}</button></div>
+            <button class="detail-toggle" data-details="${index}" aria-expanded="${isFlipped}">UPLOAD / EDIT <span>&#8635;</span></button>
+            <div class="job-actions"><span>ROUND ${number}</span><button data-index="${index}">${done ? "✓ SUBMITTED" : "MARK DONE"}</button></div>
           </div>
           <div class="job-face job-back">
-            <div class="back-head"><span>ROUND \${number} · UPLOAD</span><button class="job-close" data-details="\${index}" aria-label="Close panel">✕</button></div>
-            <label class="job-field"><span>LIVE URL · OPTIONAL</span><input type="url" data-field="live" value="\${esc(live)}" placeholder="https://nama.github.io/..."></label>
+            <div class="back-head"><span>ROUND ${number} · UPLOAD</span><button class="job-close" data-details="${index}" aria-label="Close panel">✕</button></div>
+            <label class="job-field"><span>LIVE URL · OPTIONAL</span><input type="url" data-field="live" value="${esc(live)}" placeholder="https://nama.github.io/..."></label>
             <label class="job-field job-file"><span>UPLOAD PDF</span><input type="file" data-field="pdf-file" accept="application/pdf,.pdf"></label>
-            <div class="upload-status" data-status>\${pdf ? "PDF READY · upload again to replace it" : "Choose your jobsheet PDF"}</div>
+            <div class="upload-status" data-status>${pdf ? "PDF READY · upload again to replace it" : "Choose your jobsheet PDF"}</div>
             <div class="back-links">
-              \${live ? \`<a href="\${esc(live)}" target="_blank" rel="noreferrer">↗ VIEW LIVE</a>\` : '<span>LIVE · PENDING</span>'}
-              \${pdf ? \`<a href="\${esc(pdf)}" target="_blank" rel="noreferrer">↗ VIEW PDF</a>\` : '<span>PDF · PENDING</span>'}
+              ${live ? `<a href="${esc(live)}" target="_blank" rel="noreferrer">↗ VIEW LIVE</a>` : '<span>LIVE · PENDING</span>'}
+              ${pdf ? `<a href="${esc(pdf)}" target="_blank" rel="noreferrer">↗ VIEW PDF</a>` : '<span>PDF · PENDING</span>'}
             </div>
-            <button class="job-save job-upload" data-upload="\${index}">UPLOAD PDF</button>
-            <button class="job-save job-link-save" data-save="\${index}">SAVE LIVE LINK</button>
+            <button class="job-save job-upload" data-upload="${index}">UPLOAD PDF</button>
+            <button class="job-save job-link-save" data-save="${index}">SAVE LIVE LINK</button>
           </div>
         </div>
-      </article>\`;
+      </article>`;
     }).join("");
     document.querySelector("#emptyLog").hidden = visible.length > 0;
   };
@@ -440,7 +440,7 @@ async function initCloudPlayerLog() {
         window.setTimeout(render, 900);
       } catch (error) {
         console.error(error);
-        status.textContent = \`UPLOAD FAILED · \${error.message || "Try again"}\`;
+        status.textContent = `UPLOAD FAILED · ${error.message || "Try again"}`;
         uploadButton.textContent = "TRY UPLOAD AGAIN";
       } finally {
         uploadButton.disabled = false;
