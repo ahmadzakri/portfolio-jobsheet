@@ -24,6 +24,41 @@
     localStorage.setItem(linkKeyCloud, JSON.stringify(links));
   }
 
+  async function syncCompletedFromCloud() {
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/jobsheets?player=eq.${encodeURIComponent(player)}&select=round,completed`, {
+        headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+      });
+      if (!res.ok) return;
+      const rows = await res.json();
+      const submitted = Array.from({ length: 24 }, () => false);
+      rows.forEach(row => {
+        const i = Number(row.round) - 1;
+        if (i >= 0 && i < 24) submitted[i] = Boolean(row.completed);
+      });
+      localStorage.setItem(`arena-submitted-${player}`, JSON.stringify(submitted));
+    } catch {}
+  }
+
+  async function saveCompleted(round, completed) {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/jobsheets?on_conflict=player,round`, {
+      method: "POST",
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`,
+        "Content-Type": "application/json",
+        Prefer: "resolution=merge-duplicates"
+      },
+      body: JSON.stringify({
+        player,
+        round,
+        completed: Boolean(completed),
+        updated_at: new Date().toISOString()
+      })
+    });
+    if (!res.ok) throw new Error("Could not save completion.");
+  }
+
   async function loadCloudLinks() {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/jobsheets?player=eq.${encodeURIComponent(player)}&select=round,live_url,pdf_url,file_path`, {
       headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
@@ -143,9 +178,29 @@
     });
   }
 
+  document.addEventListener("click", async (event) => {
+    const btn = event.target.closest("button[data-index]");
+    if (!btn) return;
+    const index = Number(btn.dataset.index);
+    setTimeout(async () => {
+      try {
+        const submitted = JSON.parse(localStorage.getItem(`arena-submitted-${player}`) || "[]");
+        await saveCompleted(index + 1, Boolean(submitted[index]));
+      } catch {}
+    }, 50);
+  }, true);
+
   const observer = new MutationObserver(enhanceCards);
   const grid = document.querySelector("#jobsheetGrid");
   if (grid) observer.observe(grid, { childList: true, subtree: true });
   enhanceCards();
-  loadCloudLinks().catch(() => {});
+  Promise.all([
+    syncCompletedFromCloud(),
+    loadCloudLinks()
+  ]).then(() => {
+    if (!sessionStorage.getItem("cloud-progress-synced-" + player)) {
+      sessionStorage.setItem("cloud-progress-synced-" + player, "1");
+      location.reload();
+    }
+  }).catch(() => {});
 })();
