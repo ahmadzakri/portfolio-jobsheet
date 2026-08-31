@@ -202,7 +202,11 @@
   syncCompletedFromCloud()
     .then(() => {
       loadCloudLinks().catch(() => {});
-      location.reload();
+      const syncKey = "cloud-progress-synced-" + player;
+      if (!sessionStorage.getItem(syncKey)) {
+        sessionStorage.setItem(syncKey, "1");
+        location.reload();
+      }
     })
     .catch(() => {
       loadCloudLinks().catch(() => {});
