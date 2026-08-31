@@ -166,7 +166,12 @@
           if (liveInput) links[index].live = liveInput.value.trim();
           writeLocalLinks(links);
           await saveRow(round, links[index].live, result.url, result.path);
-          status.textContent = "UPLOAD COMPLETE ✓";
+          const submitted = JSON.parse(localStorage.getItem(`arena-submitted-${player}`) || "[]");
+          while (submitted.length < 24) submitted.push(false);
+          submitted[index] = true;
+          localStorage.setItem(`arena-submitted-${player}`, JSON.stringify(submitted));
+          await saveCompleted(round, true);
+          status.textContent = "UPLOAD COMPLETE ✓ · AUTO TICKED";
           btn.textContent = "UPLOADED ✓";
           setTimeout(() => location.reload(), 700);
         } catch (e) {
