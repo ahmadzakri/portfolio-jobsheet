@@ -56,7 +56,7 @@ function readProgress(player) {
         publicJobsheetLinks[player]?.[index + 1]?.live ||
         publicJobsheetLinks[player]?.[index + 1]?.pdf
       );
-      return parsed[index] ?? fallback;
+      return Boolean(parsed[index]) || fallback;
     });
   } catch {
     return Array.from({ length: TOTAL }, (_, index) => Boolean(
