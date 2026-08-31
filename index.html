@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="King of Jobsheets — Zakri vs Redza KOF battle archive">
+  <title>King of Jobsheets · Zakri vs Redza</title>
+  <link rel="icon" href="assets/favicon.svg">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="arena-3d.css">
+  <script src="script.js" defer></script>
+  <script src="arena-3d.js" defer></script>
+</head>
+<body data-page="home">
+  <div class="intro" id="intro" role="dialog" aria-label="KOF arena introduction">
+    <div class="intro-noise"></div>
+    <div class="intro-speedlines"></div>
+    <div class="intro-flare intro-flare-red"></div>
+    <div class="intro-flare intro-flare-blue"></div>
+    <div class="intro-round"><span>FINAL ROUND</span><b>05</b></div>
+    <div class="intro-versus">
+      <span class="intro-player intro-player-one">ZAKRI<small>PLAYER 01</small></span>
+      <strong>VS</strong>
+      <span class="intro-player intro-player-two">REDZA<small>PLAYER 02</small></span>
+    </div>
+    <div class="intro-copy">
+      <span>TVETMARA LUMUT · MOBILE DEVELOPMENT</span>
+      <h1>READY?</h1>
+      <p>THE JOBSHEET BATTLE BEGINS</p>
+    </div>
+    <div class="intro-progress"><span></span></div>
+    <button class="skip-intro" id="skipIntro">SKIP INTRO · <b id="introSeconds">5</b>S</button>
+  </div>
+
+  <div class="arena-cursor-system" aria-hidden="true">
+    <span class="arena-cursor-trail trail-blue"></span>
+    <span class="arena-cursor-trail trail-red"></span>
+    <div class="arena-cursor-main">
+      <span class="cursor-energy"></span>
+      <span class="cursor-orbit cursor-orbit-outer"></span>
+      <span class="cursor-orbit cursor-orbit-inner"></span>
+      <span class="cursor-axis cursor-axis-x"></span>
+      <span class="cursor-axis cursor-axis-y"></span>
+      <span class="cursor-bracket bracket-one"></span><span class="cursor-bracket bracket-two"></span>
+      <span class="cursor-bracket bracket-three"></span><span class="cursor-bracket bracket-four"></span>
+      <span class="cursor-core"></span><span class="cursor-lock">LOCK</span>
+    </div>
+  </div>
+
+  <div class="grain"></div>
+  <div class="ambient ambient-red"></div><div class="ambient ambient-blue"></div>
+
+  <header class="topbar">
+    <a href="#home" class="brand" data-hover aria-label="King of Jobsheets home"><span>ZR</span><b>KING OF<br>JOBSHEETS</b></a>
+    <nav aria-label="Main navigation">
+      <a href="#story">ABOUT</a><a href="#fighters">TEAM</a><a href="#missions">JOBSHEETS</a>
+    </nav>
+    <span class="status"><i></i><span id="liveClock">-- --- ---- · --:--:--</span> <small>MYT</small></span>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="arena-stars"></div><div class="arena-grid"></div><div class="hero-rings"></div>
+      <div class="hero-copy">
+        <span class="eyebrow">THE KING OF JOBSHEETS · TOURNAMENT 2026</span>
+        <h1>FIGHT.<br><em>BUILD.</em><br>WIN.</h1>
+        <p>Two developers enter the arena. Every jobsheet is a new round—select your fighter, complete the mission and climb toward a perfect 24.</p>
+        <div class="hero-actions">
+          <a class="primary-action" href="#fighters" data-hover>SELECT FIGHTER <b>↗</b></a>
+          <a class="text-action" href="#missions">VIEW BATTLE RECORD <span>↓</span></a>
+        </div>
+      </div>
+      <div class="progress-module" data-hover>
+        <div class="module-top"><span>LIVE ARCHIVE</span><b><i></i> ONLINE</b></div>
+        <div class="dial-wrap">
+          <svg viewBox="0 0 220 220" aria-label="Total completion percentage">
+            <circle class="dial-track" cx="110" cy="110" r="87"></circle>
+            <circle class="dial-glow" id="dialGlow" cx="110" cy="110" r="87"></circle>
+          </svg>
+          <div class="dial-value"><strong id="totalPercent">0</strong><span>% COMPLETE</span></div>
+        </div>
+        <div class="player-readouts">
+          <a href="zakri.html?filter=completed#tournament-log"><span>ZAKRI · VIEW CLEARED</span><strong><b id="zakriCount">00</b> / 24</strong><i><b id="zakriBar"></b></i><small>OPEN RECORD ↗</small></a>
+          <a href="redza.html?filter=completed#tournament-log"><span>REDZA · VIEW CLEARED</span><strong><b id="redzaCount">00</b> / 24</strong><i><b id="redzaBar"></b></i><small>OPEN RECORD ↗</small></a>
+        </div>
+      </div>
+      <div class="scroll-cue">SCROLL TO EXPLORE <i></i></div>
+    </section>
+
+    <section class="story reveal" id="story">
+      <div class="section-index"><span>01</span><i></i></div>
+      <div class="story-title"><span class="eyebrow">THE TOURNAMENT</span><h2>EVERY ROUND<br>LEAVES A<br><em>RECORD.</em></h2></div>
+      <div class="story-copy">
+        <p class="lead">No lost links. No scattered folders. Just one arena and a clear road to victory.</p>
+        <p>Every mobile application jobsheet lives here. Progress is stored on your device, so your battle record is ready whenever you return.</p>
+        <div class="skill-list">
+          <div><span>FLUTTER / DART</span><b>88%</b><i><em style="width:88%"></em></i></div>
+          <div><span>UI / EXPERIENCE</span><b>82%</b><i><em style="width:82%"></em></i></div>
+          <div><span>API INTEGRATION</span><b>74%</b><i><em style="width:74%"></em></i></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="fighters" id="fighters">
+      <div class="section-index reveal"><span>02</span><i></i></div>
+      <div class="section-heading reveal"><span class="eyebrow">PLAYER SELECT · 2 FIGHTERS</span><h2>CHOOSE <em>YOUR SIDE</em></h2></div>
+      <div class="fighter-grid">
+        <a href="zakri.html" class="fighter-card fighter-zakri reveal" data-hover data-side="CRIMSON">
+          <div class="portrait-wrap"><img src="assets/zakri-portrait-3d.png" alt="3D fighter portrait of Ahmad Zakri"><div class="portrait-haze"></div></div>
+          <div class="fighter-number">P1</div>
+          <div class="fighter-info"><span>CRIMSON SIDE · SOFTWARE DEVELOPER</span><h3>AHMAD<br><em>ZAKRI</em></h3><p>UI flow, screen architecture and the finishing touch that turns a build into an experience.</p><b>SELECT FIGHTER <i>↗</i></b></div>
+        </a>
+        <div class="versus" aria-hidden="true"><span>VS</span><i></i></div>
+        <a href="redza.html" class="fighter-card fighter-redza reveal" data-hover data-side="AZURE">
+          <div class="portrait-wrap"><img src="assets/redza-portrait-3d.png" alt="3D fighter portrait of Shah Redza"><div class="portrait-haze"></div></div>
+          <div class="fighter-number">P2</div>
+          <div class="fighter-info"><span>AZURE SIDE · SOFTWARE DEVELOPER</span><h3>SHAH<br><em>REDZA</em></h3><p>Logic, debugging and API wiring—the calm pressure behind every working feature.</p><b>SELECT FIGHTER <i>↗</i></b></div>
+        </a>
+      </div>
+    </section>
+
+    <section class="missions reveal" id="missions">
+      <div class="mission-copy"><span>03 · BATTLE RECORD</span><h2>48 ROUNDS.<br><em>ONE CROWN.</em></h2><p>Two separate progress logs, twenty-four rounds each. Select a fighter and continue the tournament.</p></div>
+      <div class="mission-links">
+        <a href="zakri.html"><span><b>P1</b> AHMAD ZAKRI</span><em id="zakriMissionCount">0/24</em><i>↗</i></a>
+        <a href="redza.html"><span><b>P2</b> SHAH REDZA</span><em id="redzaMissionCount">0/24</em><i>↗</i></a>
+      </div>
+    </section>
+  </main>
+
+  <footer><span>© 2026 KING OF JOBSHEETS</span><p>Diploma in Computer Technology · TVETMARA Lumut</p><b>READY FOR THE NEXT ROUND ✦</b></footer>
+  <audio id="bgMusic" loop autoplay preload="auto" src="assets/bg-music.mp3"></audio>
+  <button class="sound-control" id="soundControl" aria-label="Toggle background music"><span><i></i><i></i><i></i></span><b>PLAY SOUND</b></button>
+</body>
+</html>
