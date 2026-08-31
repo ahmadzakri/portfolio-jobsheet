@@ -25,19 +25,19 @@
   }
 
   async function syncCompletedFromCloud() {
-    try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/jobsheets?player=eq.${encodeURIComponent(player)}&select=round,completed`, {
-        headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
-      });
-      if (!res.ok) return;
-      const rows = await res.json();
-      const submitted = Array.from({ length: 24 }, () => false);
-      rows.forEach(row => {
-        const i = Number(row.round) - 1;
-        if (i >= 0 && i < 24) submitted[i] = Boolean(row.completed);
-      });
-      localStorage.setItem(`arena-submitted-${player}`, JSON.stringify(submitted));
-    } catch {}
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/jobsheets?player=eq.${encodeURIComponent(player)}&select=round,completed&_=${Date.now()}`, {
+      cache: "no-store",
+      headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` }
+    });
+    if (!res.ok) throw new Error("Progress sync failed");
+    const rows = await res.json();
+    const submitted = Array.from({ length: 24 }, () => false);
+    rows.forEach(row => {
+      const i = Number(row.round) - 1;
+      if (i >= 0 && i < 24) submitted[i] = Boolean(row.completed);
+    });
+    localStorage.setItem(`arena-submitted-${player}`, JSON.stringify(submitted));
+    return submitted;
   }
 
   async function saveCompleted(round, completed) {
@@ -199,13 +199,12 @@
   const grid = document.querySelector("#jobsheetGrid");
   if (grid) observer.observe(grid, { childList: true, subtree: true });
   enhanceCards();
-  Promise.all([
-    syncCompletedFromCloud(),
-    loadCloudLinks()
-  ]).then(() => {
-    if (!sessionStorage.getItem("cloud-progress-synced-" + player)) {
-      sessionStorage.setItem("cloud-progress-synced-" + player, "1");
+  syncCompletedFromCloud()
+    .then(() => {
+      loadCloudLinks().catch(() => {});
       location.reload();
-    }
-  }).catch(() => {});
+    })
+    .catch(() => {
+      loadCloudLinks().catch(() => {});
+    });
 })();
