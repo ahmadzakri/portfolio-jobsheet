@@ -13,6 +13,16 @@ const publicJobsheetLinks = {
       live: "https://ahmadzakri.github.io/portfolio-jobsheet/JS2/",
       pdf: "https://ahmadzakri.github.io/portfolio-jobsheet/JS2/js2.pdf",
     },
+    3: {
+      live: "https://ahmadzakri.github.io/portfolio-jobsheet/JS3/",
+      pdf: "https://ahmadzakri.github.io/portfolio-jobsheet/JS3/js3.pdf",
+    },
+    4: {
+      pdf: "https://ahmadzakri.github.io/portfolio-jobsheet/JS4/js4.pdf",
+    },
+    5: {
+      pdf: "https://ahmadzakri.github.io/portfolio-jobsheet/JS5/js5.pdf",
+    },
   },
   redza: {},
 };
@@ -41,9 +51,18 @@ function storageKey(player) {
 function readProgress(player) {
   try {
     const parsed = JSON.parse(localStorage.getItem(storageKey(player)) || "[]");
-    return Array.from({ length: TOTAL }, (_, index) => Boolean(parsed[index]));
+    return Array.from({ length: TOTAL }, (_, index) => {
+      const fallback = Boolean(
+        publicJobsheetLinks[player]?.[index + 1]?.live ||
+        publicJobsheetLinks[player]?.[index + 1]?.pdf
+      );
+      return parsed[index] ?? fallback;
+    });
   } catch {
-    return Array(TOTAL).fill(false);
+    return Array.from({ length: TOTAL }, (_, index) => Boolean(
+      publicJobsheetLinks[player]?.[index + 1]?.live ||
+      publicJobsheetLinks[player]?.[index + 1]?.pdf
+    ));
   }
 }
 
