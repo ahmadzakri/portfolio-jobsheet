@@ -40,7 +40,7 @@
   /* ---------- DATA ---------- */
   async function fetchRows(name) {
     const q = name ? `player=eq.${encodeURIComponent(name)}&` : "";
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}?${q}select=*&order=round.asc&_=${Date.now()}`, { cache: "no-store", headers: headers() });
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}?${q}select=*&order=round.asc`, { cache: "no-store", headers: headers() });
     if (!res.ok) throw new Error(`CLOUD ${res.status}`);
     return res.json();
   }
