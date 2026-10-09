@@ -11,6 +11,16 @@
   const TOTAL = 24;
   const PLAYERS = ["zakri", "redza"];
 
+  // Upload terus ke repo GitHub bila token disambung (butang GITHUB).
+  const GH = {
+    owner: "ahmadzakri",
+    repo: "portfolio-jobsheet",
+    branch: "main",
+    folder: { zakri: "", redza: "REDZA/" }, // zakri → JS4/, redza → REDZA/JS4/
+  };
+  const GH_KEY = "kof-github-token";
+  const ghToken = () => { try { return localStorage.getItem(GH_KEY) || ""; } catch { return ""; } };
+
   // Jobsheet yang memang ada dalam repo GitHub (dipapar walaupun cloud offline).
   // Rekod cloud untuk round yang sama akan menggantikan ini.
   const REPO_ROUNDS = {
@@ -97,6 +107,99 @@
 
   async function deleteRound(name, round) {
     await upsertRound(name, round, { completed: false, title: null, description: null, pdf_url: null, live_url: null, html_path: null, file_path: null });
+  }
+
+  /* ---------- GITHUB ---------- */
+  const ghApi = (path) => `https://api.github.com/repos/${GH.owner}/${GH.repo}/contents/${enc(path)}`;
+  const ghHeaders = (token) => ({ Accept: "application/vnd.github+json", Authorization: `Bearer ${token}` });
+  const fileToB64 = (file) => new Promise((ok, bad) => {
+    const r = new FileReader();
+    r.onload = () => ok(String(r.result).split(",")[1] || "");
+    r.onerror = () => bad(new Error(`TAK DAPAT BACA ${file.name}`));
+    r.readAsDataURL(file);
+  });
+  async function ghError(res) {
+    const j = await res.json().catch(() => ({}));
+    return new Error({
+      401: "TOKEN GITHUB TAK SAH / TAMAT TEMPOH",
+      403: "TOKEN TIADA KEBENARAN CONTENTS: READ AND WRITE",
+      404: "REPO TAK JUMPA / TOKEN TIADA AKSES REPO NI",
+      409: "CONFLICT · CUBA LAGI",
+      422: j.message || "GITHUB TOLAK FAIL NI",
+    }[res.status] || `GITHUB ${res.status}: ${j.message || "ERROR"}`);
+  }
+  async function ghPut(path, file, message) {
+    const token = ghToken();
+    const head = await fetch(`${ghApi(path)}?ref=${GH.branch}`, { headers: ghHeaders(token), cache: "no-store" });
+    if (!head.ok && head.status !== 404) throw await ghError(head);
+    const sha = head.ok ? (await head.json()).sha : undefined;
+    const res = await fetch(ghApi(path), {
+      method: "PUT",
+      headers: { ...ghHeaders(token), "Content-Type": "application/json" },
+      body: JSON.stringify({ message, content: await fileToB64(file), branch: GH.branch, ...(sha ? { sha } : {}) }),
+    });
+    if (!res.ok) throw await ghError(res);
+  }
+  async function ghCheck(token) {
+    const res = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}`, { headers: ghHeaders(token), cache: "no-store" });
+    if (!res.ok) throw await ghError(res);
+    const j = await res.json();
+    if (!j.permissions || !j.permissions.push) throw new Error("TOKEN NI READ-ONLY · PERLU CONTENTS: READ AND WRITE");
+  }
+
+  let ghPanel;
+  function openGithubPanel(onChange) {
+    if (!ghPanel) {
+      ghPanel = document.createElement("div");
+      ghPanel.className = "arena-preview gh-panel";
+      ghPanel.hidden = true;
+      ghPanel.innerHTML = `
+        <form class="preview-panel" role="dialog" aria-modal="true" aria-label="GitHub link">
+          <div class="preview-head">
+            <div><span class="preview-kind">GITHUB LINK</span><b class="preview-title">${GH.owner}/${GH.repo}</b></div>
+            <button class="preview-close" type="button" aria-label="Close">✕</button>
+          </div>
+          <div class="gh-body">
+            <p>Bila disambung, setiap upload terus masuk ke repo GitHub (folder <b>JS4/</b>, <b>JS5/</b>…). Token disimpan dalam browser ni sahaja.</p>
+            <label class="job-field"><span>FINE-GRAINED TOKEN</span><input type="password" name="token" autocomplete="off" spellcheck="false" placeholder="github_pat_…"></label>
+            <div class="upload-status" data-gh-status></div>
+            <div class="gh-actions">
+              <button class="job-save job-link-save" type="button" data-gh-unlink>UNLINK</button>
+              <button class="job-save" type="submit">LINK GITHUB</button>
+            </div>
+          </div>
+        </form>`;
+      document.body.appendChild(ghPanel);
+      const close = () => { ghPanel.hidden = true; document.documentElement.classList.remove("preview-lock"); };
+      ghPanel.addEventListener("click", (e) => { if (e.target === ghPanel || e.target.closest(".preview-close")) close(); });
+      ghPanel.querySelector("[data-gh-unlink]").addEventListener("click", () => {
+        try { localStorage.removeItem(GH_KEY); } catch {}
+        ghPanel.querySelector("[data-gh-status]").textContent = "GITHUB DIPUTUSKAN · UPLOAD KE CLOUD SAHAJA";
+        ghPanel.querySelector("input").value = "";
+        ghPanel._onChange?.();
+      });
+      ghPanel.querySelector("form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const input = ghPanel.querySelector("input");
+        const status = ghPanel.querySelector("[data-gh-status]");
+        const token = input.value.trim();
+        if (!token) { status.textContent = "PASTE TOKEN DULU"; return; }
+        status.textContent = "CHECKING…";
+        try {
+          await ghCheck(token);
+          localStorage.setItem(GH_KEY, token);
+          status.textContent = "GITHUB LINKED ✓";
+          ghPanel._onChange?.();
+          setTimeout(close, 700);
+        } catch (err) { status.textContent = err.message; }
+      });
+    }
+    ghPanel._onChange = onChange;
+    ghPanel.querySelector("input").value = ghToken();
+    ghPanel.querySelector("[data-gh-status]").textContent = ghToken() ? "GITHUB LINKED ✓" : "";
+    ghPanel.hidden = false;
+    document.documentElement.classList.add("preview-lock");
+    ghPanel.querySelector("input").focus();
   }
 
   /* ---------- PREVIEW MODAL ---------- */
@@ -219,6 +322,7 @@
         <label class="job-field job-file"><span>CSS / JS / IMAGES</span><input type="file" name="extras" multiple></label>
         <label class="job-field"><span>OR LIVE URL</span><input type="url" name="live" value="${esc(rec ? rec.liveUrl : "")}" placeholder="https://..."></label>
         <div class="upload-status" data-status></div>
+        <span class="job-target">${ghToken() ? "→ GITHUB REPO" : "→ CLOUD"}</span>
         <button class="job-save" type="submit">${rec ? "SAVE ROUND" : "UPLOAD ROUND"}</button>
       </form>`;
     }
@@ -358,7 +462,9 @@
       if (isNew && !pdf && !html && !live) return say("PILIH PDF, HTML ATAU LIVE URL");
       if (isNew && rec && !confirm(`ROUND ${pad(round)} dah wujud. Ganti?`)) return;
 
-      const base = `${player}/round-${pad(round)}`;
+      const toGithub = Boolean(ghToken());
+      const base = toGithub ? `${GH.folder[player] || ""}JS${round}` : `${player}/round-${pad(round)}`;
+      const commitMsg = `${player.toUpperCase()} · Jobsheet ${round}: ${title}`;
       const patch = { title, description, completed: true, live_url: live || null };
       if (!isNew || rec) {
         // kekalkan fail lama yang tak diganti
@@ -368,28 +474,48 @@
       try {
         button.disabled = true;
         button.textContent = "UPLOADING…";
-        if (pdf) {
-          say("UPLOADING PDF…");
-          await uploadFile(`${base}/report.pdf`, pdf);
-          patch.pdf_url = `${publicUrl(`${base}/report.pdf`)}?v=${Date.now()}`;
-          patch.file_path = `${base}/report.pdf`;
-        }
-        if (html) {
-          say("UPLOADING HTML…");
-          await uploadFile(`${base}/site/index.html`, html);
-          patch.html_path = `${base}/site/index.html`;
-        }
-        for (const x of extras) {
-          say(`UPLOADING ${x.name.toUpperCase()}…`);
-          await uploadFile(`${base}/site/${safeName(x.name)}`, x);
+        if (toGithub) {
+          // fail masuk repo: JS4/index.html, JS4/js4.pdf, JS4/style.css …
+          if (pdf) {
+            say("PUSH PDF → GITHUB…");
+            await ghPut(`${base}/js${round}.pdf`, pdf, commitMsg);
+            patch.pdf_url = `${base}/js${round}.pdf`;
+            patch.file_path = `github:${base}/js${round}.pdf`;
+          }
+          for (const x of extras) {
+            say(`PUSH ${x.name.toUpperCase()} → GITHUB…`);
+            await ghPut(`${base}/${safeName(x.name)}`, x, commitMsg);
+          }
+          if (html) {
+            say("PUSH HTML → GITHUB…");
+            await ghPut(`${base}/index.html`, html, commitMsg);
+            patch.live_url = `${base}/`;
+            patch.html_path = null;
+          }
+        } else {
+          if (pdf) {
+            say("UPLOADING PDF…");
+            await uploadFile(`${base}/report.pdf`, pdf);
+            patch.pdf_url = `${publicUrl(`${base}/report.pdf`)}?v=${Date.now()}`;
+            patch.file_path = `${base}/report.pdf`;
+          }
+          if (html) {
+            say("UPLOADING HTML…");
+            await uploadFile(`${base}/site/index.html`, html);
+            patch.html_path = `${base}/site/index.html`;
+          }
+          for (const x of extras) {
+            say(`UPLOADING ${x.name.toUpperCase()}…`);
+            await uploadFile(`${base}/site/${safeName(x.name)}`, x);
+          }
         }
         say("SAVING ROUND…");
         await upsertRound(player, round, patch);
-        say("ROUND SAVED ✓");
+        say(toGithub && (pdf || html || extras.length) ? "SAVED ✓ · GITHUB PAGES LIVE DALAM ±1 MINIT" : "ROUND SAVED ✓");
         button.textContent = "SAVED ✓";
         button.classList.add("is-saved");
         flipped = null;
-        setTimeout(load, 600);
+        setTimeout(load, toGithub ? 1600 : 600);
       } catch (err) {
         console.error(err);
         say(err.message || "UPLOAD FAILED");
@@ -406,6 +532,16 @@
       render();
     });
 
+    const ghButton = document.querySelector("#ghLink");
+    const paintGh = () => {
+      if (!ghButton) return;
+      const on = Boolean(ghToken());
+      ghButton.textContent = on ? "GITHUB · LINKED ✓" : "LINK GITHUB";
+      ghButton.classList.toggle("is-linked", on);
+      document.querySelectorAll(".job-target").forEach((el) => { el.textContent = on ? "→ GITHUB REPO" : "→ CLOUD"; });
+    };
+    ghButton?.addEventListener("click", () => openGithubPanel(() => { paintGh(); render(); }));
+
     document.querySelector("#newRound")?.addEventListener("click", () => {
       filter = "all";
       flipped = "new";
@@ -414,6 +550,7 @@
     });
 
     render();
+    paintGh();
     load();
   }
 

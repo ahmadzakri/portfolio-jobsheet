@@ -4,9 +4,9 @@
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Shah Redza · Battle Record</title>
   <link rel="icon" href="assets/favicon.svg"><link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="arena-3d.css?v=9"><script src="script.js" defer></script>
+  <link rel="stylesheet" href="arena-3d.css?v=10"><script src="script.js" defer></script>
   <script src="arena-3d.js" defer></script>
-  <script src="jobsheet-cloud.js?v=9" defer></script>
+  <script src="jobsheet-cloud.js?v=10" defer></script>
 </head>
 <body data-page="player" data-player="redza" class="accent-blue">
   <div class="arena-cursor-system" aria-hidden="true"><span class="arena-cursor-trail trail-blue"></span><span class="arena-cursor-trail trail-red"></span><div class="arena-cursor-main"><span class="cursor-energy"></span><span class="cursor-orbit cursor-orbit-outer"></span><span class="cursor-orbit cursor-orbit-inner"></span><span class="cursor-axis cursor-axis-x"></span><span class="cursor-axis cursor-axis-y"></span><span class="cursor-bracket bracket-one"></span><span class="cursor-bracket bracket-two"></span><span class="cursor-bracket bracket-three"></span><span class="cursor-bracket bracket-four"></span><span class="cursor-core"></span><span class="cursor-lock">LOCK</span></div></div>
@@ -19,7 +19,7 @@
       <div class="player-score"><span>FIGHT RECORD</span><strong><b id="playerCompleted">0</b><small>/24</small></strong><div><i id="playerProgressBar"></i></div><b id="playerPercent">0% ROUNDS CLEARED</b></div>
     </section>
     <section class="log-section" id="tournament-log">
-      <div class="log-heading"><div><span>TOURNAMENT LOG</span><h2>ROUND <em>SELECT</em></h2></div><div class="record-controls"><a class="repo-link" href="https://github.com/ahmadzakri/JOBSHEET" target="_blank" rel="noreferrer">OPEN GITHUB REPO ↗</a><button id="newRound" type="button">+ NEW ROUND</button></div></div>
+      <div class="log-heading"><div><span>TOURNAMENT LOG</span><h2>ROUND <em>SELECT</em></h2></div><div class="record-controls"><a class="repo-link" href="https://github.com/ahmadzakri/JOBSHEET" target="_blank" rel="noreferrer">OPEN GITHUB REPO ↗</a><button id="ghLink" type="button">LINK GITHUB</button><button id="newRound" type="button">+ NEW ROUND</button></div></div>
       <div class="log-tools" aria-label="Filter jobsheets"><button data-filter="all">ALL 0</button><button data-filter="live">LIVE 0</button><button data-filter="pdf">PDF 0</button><span class="cloud-state" id="cloudState">CONNECTING…</span></div>
       <div class="jobsheet-grid" id="jobsheetGrid"></div>
       <div class="empty-log" id="emptyLog" hidden>NO ROUNDS IN THIS FILTER · CHOOSE ANOTHER VIEW</div>
