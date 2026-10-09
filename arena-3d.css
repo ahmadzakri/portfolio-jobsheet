@@ -221,3 +221,52 @@
 .job-link-save { margin-top: 7px; background: transparent; color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 60%, transparent); }
 .job-link-save:hover { background: color-mix(in srgb, var(--accent) 12%, transparent); }
 .job-save:disabled { opacity: .55; cursor: wait; }
+
+/* ============================================================
+   8. CLOUD ROUNDS · senarai, kad baru, preview popup
+   ============================================================ */
+.job-front h3 { margin: 38px 0 8px; font-size: 22px; line-height: 1.05; }
+.job-front .job-stamp { top: 40px; right: 64px; padding: 4px 8px; font-size: 7px; }
+.job-desc { margin: 0 0 auto; color: var(--dim); font-size: 12px; line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.job-front .front-links { margin-top: 14px; }
+.job-actions span:last-child { color: var(--accent); }
+.job-back { overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--accent) transparent; }
+.job-back .job-save { margin-top: 6px; flex: 0 0 auto; }
+.job-back .back-head { flex: 0 0 auto; }
+.job-field textarea { width: 100%; padding: 9px 10px; color: var(--paper); border: 1px solid rgba(255,255,255,.16); background: rgba(0,0,0,.45); font: 10px var(--mono); line-height: 1.5; outline: none; resize: vertical; transition: border-color .25s, box-shadow .25s; }
+.job-field textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent); }
+.job-field textarea::placeholder { color: #5c5a64; }
+.jobsheet { height: 360px; }
+.job-new .job-front { border-style: dashed; border-color: color-mix(in srgb, var(--accent) 45%, transparent); background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--accent) 5%, transparent) 0 10px, transparent 10px 20px), linear-gradient(145deg, rgba(18,17,24,.95), rgba(8,8,14,.86)); }
+.job-new .job-front h3 { color: var(--accent); font-size: 34px; font-style: italic; letter-spacing: -.06em; }
+.log-tools { align-items: center; }
+.cloud-state { margin-left: auto; color: var(--accent); font: 8px var(--mono); letter-spacing: .14em; }
+.cloud-state.is-off { color: var(--gold); }
+#newRound { color: #08080c; border-color: var(--accent); background: var(--accent); clip-path: polygon(0 0,94% 0,100% 30%,100% 100%,6% 100%,0 70%); }
+#newRound:hover { filter: brightness(1.15); }
+
+html.preview-lock { overflow: hidden; }
+.arena-preview { position: fixed; inset: 0; z-index: 2000; display: grid; place-items: center; padding: 3vh 3vw; background: rgba(3,3,7,.82); backdrop-filter: blur(10px); animation: preview-in .3s ease-out both; }
+.arena-preview[hidden] { display: none; }
+@keyframes preview-in { from { opacity: 0; } to { opacity: 1; } }
+.preview-panel { width: min(1180px, 100%); height: min(88vh, 900px); display: flex; flex-direction: column; border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent); background: linear-gradient(145deg, color-mix(in srgb, var(--accent) 10%, #0b0a12), #06060b); clip-path: polygon(0 0,97% 0,100% 4%,100% 100%,3% 100%,0 96%); box-shadow: 0 40px 120px rgba(0,0,0,.7); animation: preview-slam .45s cubic-bezier(.2,.9,.3,1) both; }
+@keyframes preview-slam { from { transform: perspective(1400px) translateZ(-260px) rotateX(10deg); opacity: 0; } to { transform: none; opacity: 1; } }
+.preview-head { display: flex; align-items: center; gap: 14px; padding: 14px 18px; border-bottom: 1px solid color-mix(in srgb, var(--accent) 30%, transparent); }
+.preview-head > div { flex: 1; min-width: 0; }
+.preview-kind { display: block; color: var(--accent); font: 8px var(--mono); letter-spacing: .18em; }
+.preview-title { display: block; margin-top: 5px; overflow: hidden; color: var(--paper); font: 800 11px var(--mono); letter-spacing: .08em; white-space: nowrap; text-overflow: ellipsis; }
+.preview-open { padding: 10px 12px; color: #08080c; background: var(--gold); font: 8px var(--mono); letter-spacing: .12em; white-space: nowrap; clip-path: polygon(0 0,93% 0,100% 32%,100% 100%,7% 100%,0 68%); }
+.preview-close { width: 34px; height: 34px; flex: 0 0 34px; color: var(--paper); border: 1px solid rgba(255,255,255,.22); background: none; font-size: 13px; }
+.preview-close:hover { color: #08080c; background: var(--accent); border-color: var(--accent); }
+.preview-body { position: relative; flex: 1; background: #fff; }
+.preview-body iframe { width: 100%; height: 100%; border: 0; display: block; background: #fff; }
+.preview-msg { position: absolute; left: 50%; top: 50%; margin: 0; transform: translate(-50%,-50%); color: #08080c; font: 9px var(--mono); letter-spacing: .14em; pointer-events: none; }
+.preview-msg:empty { display: none; }
+
+@media (max-width: 720px) {
+  .cloud-state { width: 100%; margin: 6px 0 0; }
+  .arena-preview { padding: 0; }
+  .preview-panel { height: 100%; clip-path: none; }
+  .preview-head { padding: max(12px, env(safe-area-inset-top)) 12px 12px; gap: 8px; }
+  .jobsheet { height: 380px; }
+}
