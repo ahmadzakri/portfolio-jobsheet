@@ -53,6 +53,7 @@
     rows.filter((row) => row.player === name).forEach((row) => {
       const round = Number(row.round);
       if (!(round >= 1 && round <= TOTAL)) return;
+      if (row.completed === false) { delete map[round]; return; } // round dipadam
       if (!row.pdf_url && !row.live_url && !row.html_path) return; // rekod lama tanpa fail
       const base = map[round] || {};
       map[round] = {
@@ -95,11 +96,7 @@
   }
 
   async function deleteRound(name, round) {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}?player=eq.${encodeURIComponent(name)}&round=eq.${round}`, {
-      method: "DELETE",
-      headers: { ...headers(), Prefer: "return=minimal" },
-    });
-    if (!res.ok) throw new Error(`DELETE FAILED (${res.status})`);
+    await upsertRound(name, round, { completed: false, title: null, description: null, pdf_url: null, live_url: null, html_path: null, file_path: null });
   }
 
   /* ---------- PREVIEW MODAL ---------- */
@@ -115,30 +112,34 @@
           <a class="preview-open" target="_blank" rel="noreferrer">OPEN TAB ↗</a>
           <button class="preview-close" type="button" aria-label="Close preview">✕</button>
         </div>
-        <div class="preview-body"><iframe title="Preview" sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-popups allow-downloads"></iframe><p class="preview-msg"></p></div>
+        <div class="preview-body"><iframe title="Preview"></iframe><p class="preview-msg"></p></div>
       </div>`;
     document.body.appendChild(preview);
     preview.addEventListener("click", (e) => { if (e.target === preview || e.target.closest(".preview-close")) closePreview(); });
     document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !preview.hidden) closePreview(); });
   }
+  function freshFrame(sandboxed) {
+    const old = preview.querySelector("iframe");
+    const frame = document.createElement("iframe");
+    frame.title = "Preview";
+    if (sandboxed) frame.setAttribute("sandbox", "allow-scripts allow-same-origin allow-forms allow-modals allow-popups allow-downloads");
+    old.replaceWith(frame);
+    return frame;
+  }
   function closePreview() {
     preview.hidden = true;
     document.documentElement.classList.remove("preview-lock");
-    const frame = preview.querySelector("iframe");
-    frame.removeAttribute("srcdoc");
-    frame.src = "about:blank";
+    freshFrame(false);
     if (blobUrl) { URL.revokeObjectURL(blobUrl); blobUrl = null; }
   }
   async function openPreview(rec, kind) {
     if (!preview) buildPreview();
-    const frame = preview.querySelector("iframe");
+    const frame = freshFrame(kind !== "pdf" && Boolean(rec.htmlPath));
     const open = preview.querySelector(".preview-open");
     const msg = preview.querySelector(".preview-msg");
     preview.querySelector(".preview-kind").textContent = kind === "pdf" ? "PDF PREVIEW" : "LIVE WEBSITE PREVIEW";
     preview.querySelector(".preview-title").textContent = `ROUND ${pad(rec.round)} · ${rec.title}`;
     msg.textContent = "";
-    frame.removeAttribute("srcdoc");
-    frame.src = "about:blank";
     preview.hidden = false;
     document.documentElement.classList.add("preview-lock");
 
@@ -209,7 +210,7 @@
     function form(rec) {
       const id = rec ? rec.round : "new";
       return `<form class="round-form" data-form="${id}" novalidate>
-        <div class="back-head"><span>${rec ? `ROUND ${pad(rec.round)} · EDIT` : "NEW ROUND · UPLOAD"}</span><button class="job-close" type="button" data-flip="${id}" aria-label="Close panel">✕</button></div>
+        <div class="back-head"><span>${rec ? `ROUND ${pad(rec.round)} · EDIT` : "NEW ROUND · UPLOAD"}</span><div class="back-tools">${rec ? `<button class="job-delete" type="button" data-delete="${rec.round}">DELETE</button>` : ""}<button class="job-close" type="button" data-flip="${id}" aria-label="Close panel">✕</button></div></div>
         ${rec ? "" : `<label class="job-field"><span>ROUND NO.</span><input type="number" name="round" min="1" max="${TOTAL}" value="${nextRound()}" required></label>`}
         <label class="job-field"><span>TITLE</span><input type="text" name="title" maxlength="80" value="${esc(rec ? rec.title : "")}" placeholder="JOBSHEET 4 - CSS3" required></label>
         <label class="job-field"><span>DESCRIPTION</span><textarea name="description" rows="2" maxlength="240" placeholder="Apa yang dibina dalam jobsheet ni">${esc(rec ? rec.description : "")}</textarea></label>
@@ -219,7 +220,6 @@
         <label class="job-field"><span>OR LIVE URL</span><input type="url" name="live" value="${esc(rec ? rec.liveUrl : "")}" placeholder="https://..."></label>
         <div class="upload-status" data-status></div>
         <button class="job-save" type="submit">${rec ? "SAVE ROUND" : "UPLOAD ROUND"}</button>
-        ${rec && rec.source === "cloud" ? `<button class="job-save job-link-save" type="button" data-delete="${rec.round}">DELETE ROUND</button>` : ""}
       </form>`;
     }
 
@@ -313,10 +313,12 @@
       const del = e.target.closest("[data-delete]");
       if (del) {
         const round = Number(del.dataset.delete);
-        if (!confirm(`Padam ROUND ${pad(round)} dari senarai?`)) return;
+        if (!cloudOk) return alert("CLOUD OFFLINE · TAK BOLEH PADAM");
+        if (!confirm(`Padam ROUND ${pad(round)} dari senarai? Kau boleh upload semula nanti.`)) return;
         const status = del.closest("form").querySelector("[data-status]");
         try {
           del.disabled = true;
+          del.textContent = "…";
           status.textContent = "DELETING…";
           await deleteRound(player, round);
           flipped = null;
@@ -324,6 +326,7 @@
         } catch (err) {
           status.textContent = err.message;
           del.disabled = false;
+          del.textContent = "DELETE";
         }
       }
     });
