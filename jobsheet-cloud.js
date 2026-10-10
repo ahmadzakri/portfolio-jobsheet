@@ -25,16 +25,16 @@
   // A cloud record for the same round replaces these.
   const REPO_ROUNDS = {
     zakri: {
-      1: { title: "JOBSHEET 1 - HTML5", description: "Rossi restaurant website with a menu, interior photos and signature dishes.", live: "JS1/", pdf: "JS1/js1.pdf" },
-      2: { title: "JOBSHEET 2 - HTML5", description: "Digital camera comparison website with specifications and brand information.", live: "JS2/", pdf: "JS2/js2.pdf" },
-      3: { title: "JOBSHEET 3 - HTML5", description: "College information website with navigation links and course details.", live: "JS3/", pdf: "JS3/js3.pdf" },
-      4: { title: "JOBSHEET 4 - CSS3", description: "Art gallery website for The Scream by Edvard Munch, styled with external CSS3.", live: "JS4/", pdf: "JS4/js4.pdf", added: "2026-10-10T01:45:00Z" },
-      5: { title: "JOBSHEET 5 - CSS3", description: "Creative Arts Store artist registration form (Set 3), styled with external CSS3 styleLab5.css.", live: "JS5/", pdf: "JS5/js5.pdf", added: "2026-10-10T02:10:00Z" },
-      6: { title: "JOBSHEET 6 - CSS3", description: "Campus Library mobile web page (Set 3) with a gradient header, rounded navigation lists and a library illustration, styled with external CSS3 style.css.", live: "JS6/", pdf: "JS6/js6.pdf", added: "2026-10-10T02:20:00Z" },
-      7: { title: "JOBSHEET 7 - JavaScript Event", description: "Malaysian Heritage photo gallery (Set 3) using JavaScript events: clicking a thumbnail swaps the featured image, and hovering fades its caption in and out, with external Lab8.js.", live: "JS7/", pdf: "JS7/js7.pdf", added: "2026-10-10T02:45:00Z" },
-      8: { title: "JOBSHEET 8 - JavaScript Client Side Validation", description: "Event Registration form (Set 3) with JavaScript client-side validation: fields highlight on focus, and empty required fields are flagged in red on submit, with external Lab9.js.", live: "JS8/", pdf: "JS8/js8.pdf", added: "2026-10-10T03:00:00Z" },
-      9: { title: "JOBSHEET 9 - JavaScript Functions", description: "Nature Art Collection shopping cart (Set 3) built with external JavaScript files: data arrays in data.js, reusable functions in function.js and Lab7.js calculating subtotal, tax, shipping and grand total.", live: "JS9/", pdf: "JS9/js9.pdf", added: "2026-10-10T03:10:00Z" },
-      12: { title: "JOBSHEET 12 - jQuery AJAX", description: "Load Course Information (Set 3) using jQuery AJAX: clicking the button loads course.txt into #div1 with $.ajax() without reloading the page, using jQuery 3.5.1.", live: "JS12/", pdf: "JS12/js12.pdf", added: "2026-10-10T03:20:00Z" },
+      1: { title: "JOBSHEET 1 - HTML5 (SET 3)", description: "Rossi restaurant website with a menu, interior photos and signature dishes.", live: "JS1/", pdf: "JS1/js1.pdf" },
+      2: { title: "JOBSHEET 2 - HTML5 (SET 3)", description: "Digital camera comparison website with specifications and brand information.", live: "JS2/", pdf: "JS2/js2.pdf" },
+      3: { title: "JOBSHEET 3 - HTML5 (SET 3)", description: "College information website with navigation links and course details.", live: "JS3/", pdf: "JS3/js3.pdf" },
+      4: { title: "JOBSHEET 4 - CSS3 (SET 3)", description: "Art gallery website for The Scream by Edvard Munch, styled with external CSS3.", live: "JS4/", pdf: "JS4/js4.pdf", added: "2026-10-10T01:45:00Z" },
+      5: { title: "JOBSHEET 5 - CSS3 (SET 3)", description: "Creative Arts Store artist registration form (Set 3), styled with external CSS3 styleLab5.css.", live: "JS5/", pdf: "JS5/js5.pdf", added: "2026-10-10T02:10:00Z" },
+      6: { title: "JOBSHEET 6 - CSS3 (SET 3)", description: "Campus Library mobile web page (Set 3) with a gradient header, rounded navigation lists and a library illustration, styled with external CSS3 style.css.", live: "JS6/", pdf: "JS6/js6.pdf", added: "2026-10-10T02:20:00Z" },
+      7: { title: "JOBSHEET 7 - JavaScript Event (SET 3)", description: "Malaysian Heritage photo gallery (Set 3) using JavaScript events: clicking a thumbnail swaps the featured image, and hovering fades its caption in and out, with external Lab8.js.", live: "JS7/", pdf: "JS7/js7.pdf", added: "2026-10-10T02:45:00Z" },
+      8: { title: "JOBSHEET 8 - JavaScript Client Side Validation (SET 3)", description: "Event Registration form (Set 3) with JavaScript client-side validation: fields highlight on focus, and empty required fields are flagged in red on submit, with external Lab9.js.", live: "JS8/", pdf: "JS8/js8.pdf", added: "2026-10-10T03:00:00Z" },
+      9: { title: "JOBSHEET 9 - JavaScript Functions (SET 3)", description: "Nature Art Collection shopping cart (Set 3) built with external JavaScript files: data arrays in data.js, reusable functions in function.js and Lab7.js calculating subtotal, tax, shipping and grand total.", live: "JS9/", pdf: "JS9/js9.pdf", added: "2026-10-10T03:10:00Z" },
+      12: { title: "JOBSHEET 12 - jQuery AJAX (SET 3)", description: "Load Course Information (Set 3) using jQuery AJAX: clicking the button loads course.txt into #div1 with $.ajax() without reloading the page, using jQuery 3.5.1.", live: "JS12/", pdf: "JS12/js12.pdf", added: "2026-10-10T03:20:00Z" },
     },
     redza: {},
   };
