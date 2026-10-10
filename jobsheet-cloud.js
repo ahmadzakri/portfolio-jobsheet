@@ -28,7 +28,7 @@
       1: { title: "JOBSHEET 1 - HTML5", description: "Laman web restoran Rossi dengan menu, gambar hiasan dalaman dan hidangan istimewa.", live: "JS1/", pdf: "JS1/js1.pdf" },
       2: { title: "JOBSHEET 2 - HTML5", description: "Laman web perbandingan kamera digital dengan spesifikasi dan maklumat jenama.", live: "JS2/", pdf: "JS2/js2.pdf" },
       3: { title: "JOBSHEET 3 - HTML5", description: "Laman web maklumat kolej dengan pautan navigasi dan butiran kursus.", live: "JS3/", pdf: "JS3/js3.pdf" },
-      4: { title: "JOBSHEET 4 - CSS3", description: "Laman web galeri seni The Scream oleh Edvard Munch, digayakan dengan external CSS3.", live: "JS4/", pdf: "JS4/js4.pdf" },
+      4: { title: "JOBSHEET 4 - CSS3", description: "Laman web galeri seni The Scream oleh Edvard Munch, digayakan dengan external CSS3.", live: "JS4/", pdf: "JS4/js4.pdf", added: "2026-10-10T01:45:00Z" },
     },
     redza: {},
   };
@@ -59,12 +59,17 @@
   function mergeRounds(name, rows) {
     const map = {};
     Object.entries(REPO_ROUNDS[name] || {}).forEach(([round, r]) => {
-      map[round] = { round: Number(round), title: r.title, description: r.description, liveUrl: r.live || "", htmlPath: "", pdf: r.pdf || "", updated: "", source: "repo" };
+      map[round] = { round: Number(round), title: r.title, description: r.description, liveUrl: r.live || "", htmlPath: "", pdf: r.pdf || "", updated: r.added || "", added: r.added || "", source: "repo" };
     });
     rows.filter((row) => row.player === name).forEach((row) => {
       const round = Number(row.round);
       if (!(round >= 1 && round <= TOTAL)) return;
-      if (row.completed === false) { delete map[round]; return; } // round dipadam
+      if (row.completed === false) {
+        // rekod padam lama tak boleh sorok round repo yang ditambah selepasnya
+        const repo = map[round];
+        if (repo && repo.added && (!row.updated_at || new Date(row.updated_at) < new Date(repo.added))) return;
+        delete map[round]; return;
+      } // round dipadam
       if (!row.pdf_url && !row.live_url && !row.html_path) return; // rekod lama tanpa fail
       const base = map[round] || {};
       map[round] = {
