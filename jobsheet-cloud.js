@@ -37,6 +37,7 @@
       12: { title: "JOBSHEET 10 - jQuery AJAX", description: "Load Course Information (Set 3) using jQuery AJAX: clicking the button loads course.txt into #div1 with $.ajax() without reloading the page, using jQuery 3.5.1.", live: "JS12/", pdf: "JS12/js12.pdf", added: "2026-10-10T03:20:00Z" },
       13: { title: "JOBSHEET 11 - jQuery Project", description: "Arcade Team Builder, a self-built jQuery project: create fighters with validation, filter the roster by style, animate stat bars, pick a 3-fighter team with live team power, and use fade, slide and animate effects with event delegation, using jQuery 3.7.1.", live: "JS13/", pdf: "JS13/js13.pdf", added: "2026-10-10T03:40:00Z" },
       14: { title: "JOBSHEET 12 - jQuery Project", description: "Kopi Corner, a self-built jQuery cafe ordering app: search and filter the menu by category, choose drink sizes, add items to a cart with quantity controls, apply a promo code, and calculate subtotal, discount, 6% service tax and total, with fade, slide and animate effects.", live: "JS14/", pdf: "JS14/js14.pdf", added: "2026-10-10T04:00:00Z" },
+      15: { title: "JOBSHEET 13 - Web Storage", description: "Pocket Expense Tracker, a self-built receipt-style app using HTML5 localStorage: add expenses with item, amount and category, delete single items or clear all, with a running total and a dark mode setting that persist after refresh.", live: "JS15/", pdf: "JS15/js15.pdf", added: "2026-10-10T04:20:00Z" },
     },
     redza: {},
   };

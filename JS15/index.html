@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pocket Expense Tracker | Jobsheet 13 (Set 3)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #1f6f6b;
+    --bg-pattern: #237a75;
+    --paper: #fffdf6;
+    --ink: #22201c;
+    --muted: #7a746a;
+    --line: #d9d2c3;
+    --accent: #e2a72e;
+    --danger: #c0392b;
+  }
+  body.dark {
+    --bg: #12201f;
+    --bg-pattern: #172928;
+    --paper: #26302f;
+    --ink: #ecebe4;
+    --muted: #9fa9a6;
+    --line: #3d4a48;
+    --accent: #f0bf55;
+    --danger: #ff7a6b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    min-height: 100vh;
+    font-family: "Outfit", system-ui, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    background-image: repeating-linear-gradient(45deg, var(--bg-pattern) 0 12px, transparent 12px 24px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 16px;
+    transition: background-color .3s;
+  }
+  header {
+    width: 100%;
+    max-width: 440px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    color: #fff;
+  }
+  header h1 { font-size: 1.6rem; font-weight: 800; letter-spacing: -.5px; }
+  header p { font-size: .9rem; opacity: .8; }
+  .theme-btn {
+    background: rgba(255,255,255,.15);
+    color: #fff;
+    border: 2px solid rgba(255,255,255,.5);
+    border-radius: 50%;
+    width: 44px; height: 44px;
+    font-size: 1.2rem;
+    cursor: pointer;
+  }
+  .theme-btn:hover { background: rgba(255,255,255,.3); }
+
+  .receipt {
+    width: 100%;
+    max-width: 440px;
+    background: var(--paper);
+    padding: 28px 24px 36px;
+    position: relative;
+    box-shadow: 0 18px 40px rgba(0,0,0,.25);
+    transition: background-color .3s, color .3s;
+  }
+  /* zig-zag torn edge at bottom */
+  .receipt::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: -12px;
+    height: 12px;
+    background: linear-gradient(-45deg, transparent 8px, var(--paper) 0) 0 0 / 16px 12px repeat-x,
+                linear-gradient(45deg, transparent 8px, var(--paper) 0) 0 0 / 16px 12px repeat-x;
+  }
+
+  form { display: grid; gap: 10px; margin-bottom: 24px; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  label { font-size: .8rem; font-weight: 600; color: var(--muted); display: block; margin-bottom: 4px; }
+  input, select {
+    width: 100%;
+    padding: 10px 12px;
+    font: inherit;
+    color: var(--ink);
+    background: transparent;
+    border: 2px solid var(--line);
+    border-radius: 6px;
+  }
+  input:focus, select:focus, button:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 1px;
+  }
+  .add-btn {
+    padding: 12px;
+    font: inherit;
+    font-weight: 800;
+    background: var(--accent);
+    color: #22201c;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .add-btn:hover { filter: brightness(1.08); }
+  .error { color: var(--danger); font-size: .85rem; min-height: 1em; }
+
+  .slip { font-family: "Courier Prime", monospace; }
+  .slip-head {
+    text-align: center;
+    border-top: 2px dashed var(--line);
+    border-bottom: 2px dashed var(--line);
+    padding: 10px 0;
+    margin-bottom: 12px;
+  }
+  .slip-head strong { font-size: 1.1rem; }
+  .slip-head span { display: block; font-size: .8rem; color: var(--muted); }
+
+  ul { list-style: none; }
+  li {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 10px;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px dotted var(--line);
+    animation: printIn .25s ease-out;
+  }
+  li .name { word-break: break-word; }
+  li .cat { font-size: .75rem; color: var(--muted); display: block; }
+  li .amt { font-weight: 700; }
+  .del-btn {
+    background: none;
+    border: none;
+    color: var(--danger);
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+  .empty { text-align: center; color: var(--muted); padding: 18px 0; }
+
+  .total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.3rem;
+    font-weight: 700;
+    border-top: 2px dashed var(--line);
+    margin-top: 12px;
+    padding-top: 12px;
+  }
+  .meta { font-size: .8rem; color: var(--muted); margin-top: 6px; text-align: center; }
+
+  .clear-btn {
+    margin-top: 20px;
+    width: 100%;
+    padding: 10px;
+    font: inherit;
+    font-weight: 600;
+    background: transparent;
+    color: var(--danger);
+    border: 2px solid var(--danger);
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .clear-btn:hover { background: var(--danger); color: var(--paper); }
+
+  footer {
+    margin-top: 36px;
+    color: #fff;
+    text-align: center;
+    font-size: .85rem;
+    opacity: .85;
+    line-height: 1.6;
+  }
+
+  @keyframes printIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    li { animation: none; }
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>Pocket Expense Tracker</h1>
+    <p>Your spending, saved in this browser.</p>
+  </div>
+  <button class="theme-btn" id="themeBtn" aria-label="Toggle dark mode">🌙</button>
+</header>
+
+<main class="receipt">
+  <form id="expenseForm">
+    <div>
+      <label for="item">Item</label>
+      <input type="text" id="item" placeholder="e.g. Nasi lemak" maxlength="40">
+    </div>
+    <div class="row">
+      <div>
+        <label for="amount">Amount (RM)</label>
+        <input type="number" id="amount" placeholder="0.00" min="0.01" step="0.01">
+      </div>
+      <div>
+        <label for="category">Category</label>
+        <select id="category">
+          <option>Food</option>
+          <option>Transport</option>
+          <option>Study</option>
+          <option>Bills</option>
+          <option>Others</option>
+        </select>
+      </div>
+    </div>
+    <p class="error" id="error"></p>
+    <button type="submit" class="add-btn">Add Expense</button>
+  </form>
+
+  <section class="slip">
+    <div class="slip-head">
+      <strong>EXPENSE SLIP</strong>
+      <span id="today"></span>
+    </div>
+
+    <ul id="list"></ul>
+
+    <div class="total">
+      <span>TOTAL</span>
+      <span id="total">RM 0.00</span>
+    </div>
+    <p class="meta" id="meta">No expenses yet</p>
+  </section>
+
+  <button class="clear-btn" id="clearBtn">Delete All Expenses</button>
+</main>
+
+<footer>
+  <p>JOBSHEET 13 - Web Storage (Local Storage) (SET 3)</p>
+  <p>Ahmad Zakri bin Ismail</p>
+</footer>
+
+<script>
+  const STORAGE_KEY = "zakri_expenses";
+  const THEME_KEY = "zakri_theme";
+
+  const form = document.getElementById("expenseForm");
+  const itemInput = document.getElementById("item");
+  const amountInput = document.getElementById("amount");
+  const categoryInput = document.getElementById("category");
+  const errorText = document.getElementById("error");
+  const list = document.getElementById("list");
+  const totalText = document.getElementById("total");
+  const metaText = document.getElementById("meta");
+  const themeBtn = document.getElementById("themeBtn");
+  const clearBtn = document.getElementById("clearBtn");
+
+  document.getElementById("today").textContent =
+    new Date().toLocaleDateString("en-MY", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+
+  // ---------- localStorage helpers ----------
+  function loadExpenses() {
+    const data = localStorage.getItem(STORAGE_KEY);
+    return data ? JSON.parse(data) : [];
+  }
+
+  function saveExpenses(expenses) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses));
+  }
+
+  // ---------- display ----------
+  function renderExpenses() {
+    const expenses = loadExpenses();
+    list.innerHTML = "";
+
+    if (expenses.length === 0) {
+      list.innerHTML = '<li class="empty" style="display:block">Nothing recorded. Add your first expense above.</li>';
+      totalText.textContent = "RM 0.00";
+      metaText.textContent = "No expenses yet";
+      return;
+    }
+
+    let total = 0;
+    expenses.forEach(function (exp) {
+      total += exp.amount;
+
+      const li = document.createElement("li");
+
+      const nameDiv = document.createElement("div");
+      nameDiv.className = "name";
+      nameDiv.textContent = exp.item;
+      const cat = document.createElement("span");
+      cat.className = "cat";
+      cat.textContent = exp.category + ", " + exp.time;
+      nameDiv.appendChild(cat);
+
+      const amt = document.createElement("span");
+      amt.className = "amt";
+      amt.textContent = "RM " + exp.amount.toFixed(2);
+
+      const delBtn = document.createElement("button");
+      delBtn.className = "del-btn";
+      delBtn.textContent = "✕";
+      delBtn.setAttribute("aria-label", "Delete " + exp.item);
+      delBtn.addEventListener("click", function () {
+        deleteExpense(exp.id);
+      });
+
+      li.append(nameDiv, amt, delBtn);
+      list.appendChild(li);
+    });
+
+    totalText.textContent = "RM " + total.toFixed(2);
+    metaText.textContent = expenses.length + " item(s) saved in localStorage";
+  }
+
+  // ---------- add ----------
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    const item = itemInput.value.trim();
+    const amount = parseFloat(amountInput.value);
+
+    if (item === "") {
+      errorText.textContent = "Enter an item name.";
+      itemInput.focus();
+      return;
+    }
+    if (isNaN(amount) || amount <= 0) {
+      errorText.textContent = "Enter an amount greater than RM 0.";
+      amountInput.focus();
+      return;
+    }
+
+    errorText.textContent = "";
+
+    const expenses = loadExpenses();
+    expenses.push({
+      id: Date.now(),
+      item: item,
+      amount: amount,
+      category: categoryInput.value,
+      time: new Date().toLocaleTimeString("en-MY", { hour: "2-digit", minute: "2-digit" })
+    });
+    saveExpenses(expenses);
+
+    form.reset();
+    itemInput.focus();
+    renderExpenses();
+  });
+
+  // ---------- delete one ----------
+  function deleteExpense(id) {
+    const expenses = loadExpenses().filter(function (exp) {
+      return exp.id !== id;
+    });
+    saveExpenses(expenses);
+    renderExpenses();
+  }
+
+  // ---------- delete all ----------
+  clearBtn.addEventListener("click", function () {
+    if (loadExpenses().length === 0) return;
+    if (confirm("Delete all expenses? This cannot be undone.")) {
+      localStorage.removeItem(STORAGE_KEY);
+      renderExpenses();
+    }
+  });
+
+  // ---------- dark mode (saved in localStorage) ----------
+  function applyTheme(theme) {
+    document.body.classList.toggle("dark", theme === "dark");
+    themeBtn.textContent = theme === "dark" ? "☀️" : "🌙";
+  }
+
+  themeBtn.addEventListener("click", function () {
+    const newTheme = document.body.classList.contains("dark") ? "light" : "dark";
+    localStorage.setItem(THEME_KEY, newTheme);
+    applyTheme(newTheme);
+  });
+
+  // ---------- on page load ----------
+  applyTheme(localStorage.getItem(THEME_KEY) || "light");
+  renderExpenses();
+</script>
+</body>
+</html>
