@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kopi Corner Order | jQuery 12 - Ahmad Zakri</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Poppins',sans-serif;background:#f6efe6;color:#3b2a20;padding:24px}
+  .wrap{max-width:1050px;margin:auto}
+  header{text-align:center;margin-bottom:20px}
+  header h1{font-size:30px;color:#6f4e37}
+  header p{color:#8a7465;font-size:14px}
+  .layout{display:grid;grid-template-columns:2fr 1fr;gap:18px}
+  @media(max-width:800px){.layout{grid-template-columns:1fr}}
+  .box{background:#fff;border-radius:14px;padding:18px;box-shadow:0 4px 14px rgba(111,78,55,.1)}
+  .box h2{font-size:17px;margin-bottom:12px;color:#6f4e37}
+  .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+  .toolbar input{flex:1;min-width:160px;padding:9px 12px;border:1px solid #e0d2c3;border-radius:8px;font:inherit}
+  .cat{padding:8px 14px;border:none;border-radius:20px;background:#efe3d6;color:#6f4e37;cursor:pointer;font:inherit;font-size:13px}
+  .cat.active{background:#6f4e37;color:#fff}
+  .menu{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+  .item{border:1px solid #efe3d6;border-radius:12px;padding:14px;text-align:center;transition:transform .2s}
+  .item:hover{transform:translateY(-3px)}
+  .item .emoji{font-size:38px}
+  .item h3{font-size:15px;margin:6px 0 2px}
+  .item .price{color:#c0712f;font-weight:700}
+  .item select{width:100%;margin:8px 0;padding:6px;border:1px solid #e0d2c3;border-radius:6px;font:inherit;font-size:13px}
+  .add{width:100%;padding:8px;border:none;border-radius:8px;background:#c0712f;color:#fff;cursor:pointer;font:inherit;font-weight:600}
+  .add:hover{background:#a65e22}
+  .empty-menu{display:none;text-align:center;color:#8a7465;padding:20px}
+  #cart{list-style:none;min-height:60px}
+  #cart li{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px dashed #e0d2c3;font-size:14px}
+  #cart li small{color:#8a7465;display:block}
+  .qty{display:flex;align-items:center;gap:6px}
+  .qty button{width:24px;height:24px;border:none;border-radius:50%;background:#efe3d6;cursor:pointer;font-weight:700}
+  .empty{color:#8a7465;font-size:14px;text-align:center;padding:14px 0}
+  .sum{margin-top:12px;font-size:14px}
+  .sum div{display:flex;justify-content:space-between;padding:3px 0}
+  .sum .total{font-size:18px;font-weight:700;color:#6f4e37;border-top:2px solid #efe3d6;padding-top:8px;margin-top:4px}
+  .promo{display:flex;gap:6px;margin-top:12px}
+  .promo input{flex:1;padding:8px;border:1px solid #e0d2c3;border-radius:8px;font:inherit;font-size:13px}
+  .promo button,.btn{padding:8px 12px;border:none;border-radius:8px;background:#6f4e37;color:#fff;cursor:pointer;font:inherit;font-size:13px}
+  .btn{width:100%;margin-top:12px;padding:11px;font-weight:600}
+  .btn.clear{background:#efe3d6;color:#6f4e37;margin-top:6px}
+  .note{font-size:12px;margin-top:6px;min-height:16px}
+  .badge{background:#c0712f;color:#fff;border-radius:10px;padding:1px 8px;font-size:12px;margin-left:6px}
+  #toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#3b2a20;color:#fff;padding:10px 18px;border-radius:20px;font-size:14px;display:none}
+  #receipt{display:none;margin-top:14px;background:#fffaf3;border:1px dashed #c0712f;border-radius:10px;padding:14px;font-size:13px}
+  footer{text-align:center;font-size:12px;color:#8a7465;margin-top:20px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>&#9749; Kopi Corner</h1>
+    <p>Jobsheet 13 &mdash; jQuery 12 &bull; Ahmad Zakri bin Ismail</p>
+  </header>
+
+  <div class="layout">
+    <!-- MENU -->
+    <div class="box">
+      <h2>Menu</h2>
+      <div class="toolbar">
+        <input type="text" id="search" placeholder="Search menu...">
+      </div>
+      <div class="toolbar">
+        <button class="cat active" data-cat="all">All</button>
+        <button class="cat" data-cat="coffee">Coffee</button>
+        <button class="cat" data-cat="tea">Tea</button>
+        <button class="cat" data-cat="food">Food</button>
+      </div>
+      <div class="menu" id="menu"></div>
+      <p class="empty-menu" id="noResult">No item found.</p>
+    </div>
+
+    <!-- CART -->
+    <div class="box">
+      <h2>Your Order <span class="badge" id="count">0</span></h2>
+      <ul id="cart"></ul>
+      <p class="empty" id="emptyCart">Cart is empty. Add something tasty!</p>
+
+      <div class="promo">
+        <input type="text" id="promoCode" placeholder="Promo code (try KOPI10)">
+        <button id="applyPromo">Apply</button>
+      </div>
+      <p class="note" id="promoNote"></p>
+
+      <div class="sum">
+        <div><span>Subtotal</span><span id="subtotal">RM 0.00</span></div>
+        <div><span>Discount</span><span id="discount">- RM 0.00</span></div>
+        <div><span>Service tax (6%)</span><span id="tax">RM 0.00</span></div>
+        <div class="total"><span>Total</span><span id="total">RM 0.00</span></div>
+      </div>
+
+      <button class="btn" id="checkout">Place Order</button>
+      <button class="btn clear" id="clearCart">Clear Cart</button>
+      <div id="receipt"></div>
+    </div>
+  </div>
+
+  <footer>Built with HTML, CSS &amp; jQuery 3.7.1</footer>
+</div>
+<div id="toast"></div>
+
+<script>
+$(function () {
+
+  var menu = [
+    { id: 1, name: "Kopi O",          cat: "coffee", price: 3.50, emoji: "&#9749;" },
+    { id: 2, name: "Iced Latte",      cat: "coffee", price: 8.90, emoji: "&#129380;" },
+    { id: 3, name: "Cappuccino",      cat: "coffee", price: 9.50, emoji: "&#9749;" },
+    { id: 4, name: "Teh Tarik",       cat: "tea",    price: 3.80, emoji: "&#127861;" },
+    { id: 5, name: "Matcha Latte",    cat: "tea",    price: 10.90, emoji: "&#127861;" },
+    { id: 6, name: "Nasi Lemak",      cat: "food",   price: 7.50, emoji: "&#127835;" },
+    { id: 7, name: "Roti Bakar",      cat: "food",   price: 4.20, emoji: "&#127838;" },
+    { id: 8, name: "Chocolate Cake",  cat: "food",   price: 9.90, emoji: "&#127856;" }
+  ];
+  var sizes = { Regular: 0, Large: 2 };
+  var cart = [];          // {key, id, name, size, price, qty}
+  var discountRate = 0;
+  var activeCat = "all";
+
+  function rm(n) { return "RM " + n.toFixed(2); }
+
+  function toast(text) {
+    $("#toast").stop(true, true).text(text).fadeIn(200).delay(1400).fadeOut(300);
+  }
+
+  // ---------- BUILD MENU ----------
+  $.each(menu, function (i, m) {
+    var $item = $(
+      '<div class="item" data-id="' + m.id + '" data-cat="' + m.cat + '">' +
+        '<div class="emoji">' + m.emoji + '</div>' +
+        '<h3>' + m.name + '</h3>' +
+        '<div class="price">' + rm(m.price) + '</div>' +
+        '<select class="size"><option>Regular</option><option>Large</option></select>' +
+        '<button class="add">Add to Order</button>' +
+      '</div>'
+    );
+    if (m.cat === "food") $item.find(".size").remove();
+    $("#menu").append($item);
+  });
+  $(".item").hide().each(function (i) { $(this).delay(i * 80).fadeIn(300); });
+
+  // ---------- FILTER + SEARCH ----------
+  function filterMenu() {
+    var q = $.trim($("#search").val()).toLowerCase();
+    var visible = 0;
+    $(".item").each(function () {
+      var name = $(this).find("h3").text().toLowerCase();
+      var ok = (activeCat === "all" || $(this).data("cat") === activeCat) && name.indexOf(q) !== -1;
+      $(this).toggle(ok);
+      if (ok) visible++;
+    });
+    visible ? $("#noResult").hide() : $("#noResult").fadeIn(200);
+  }
+
+  $(".cat").on("click", function () {
+    $(".cat").removeClass("active");
+    $(this).addClass("active");
+    activeCat = $(this).data("cat");
+    filterMenu();
+  });
+  $("#search").on("keyup", filterMenu);
+
+  // ---------- ADD TO CART ----------
+  $("#menu").on("click", ".add", function () {
+    var $item = $(this).closest(".item");
+    var m = $.grep(menu, function (x) { return x.id === $item.data("id"); })[0];
+    var size = $item.find(".size").length ? $item.find(".size").val() : "-";
+    var key = m.id + "-" + size;
+    var price = m.price + (sizes[size] || 0);
+
+    var found = $.grep(cart, function (c) { return c.key === key; })[0];
+    if (found) found.qty++;
+    else cart.push({ key: key, name: m.name, size: size, price: price, qty: 1 });
+
+    $item.css("background", "#fdf0e2").animate({ opacity: 0.6 }, 120).animate({ opacity: 1 }, 120, function () {
+      $(this).css("background", "");
+    });
+    toast(m.name + " added!");
+    renderCart();
+  });
+
+  // ---------- RENDER CART ----------
+  function renderCart() {
+    var $cart = $("#cart").empty();
+    var subtotal = 0, count = 0;
+
+    $.each(cart, function (i, c) {
+      subtotal += c.price * c.qty;
+      count += c.qty;
+      $cart.append(
+        '<li data-key="' + c.key + '">' +
+          '<div>' + c.name + '<small>' + (c.size !== "-" ? c.size + " &bull; " : "") + rm(c.price) + '</small></div>' +
+          '<div class="qty"><button class="minus">-</button><b>' + c.qty + '</b><button class="plus">+</button></div>' +
+        '</li>'
+      );
+    });
+
+    cart.length ? $("#emptyCart").hide() : $("#emptyCart").show();
+
+    var discount = subtotal * discountRate;
+    var tax = (subtotal - discount) * 0.06;
+    $("#subtotal").text(rm(subtotal));
+    $("#discount").text("- " + rm(discount));
+    $("#tax").text(rm(tax));
+    $("#total").text(rm(subtotal - discount + tax));
+    $("#count").text(count);
+  }
+
+  $("#cart").on("click", ".plus, .minus", function () {
+    var key = $(this).closest("li").data("key");
+    var c = $.grep(cart, function (x) { return x.key === key; })[0];
+    c.qty += $(this).hasClass("plus") ? 1 : -1;
+    if (c.qty <= 0) {
+      $(this).closest("li").slideUp(200, function () {
+        cart = $.grep(cart, function (x) { return x.key !== key; });
+        renderCart();
+      });
+      return;
+    }
+    renderCart();
+  });
+
+  // ---------- PROMO ----------
+  $("#applyPromo").on("click", function () {
+    var code = $.trim($("#promoCode").val()).toUpperCase();
+    if (code === "KOPI10") {
+      discountRate = 0.10;
+      $("#promoNote").css("color", "green").text("KOPI10 applied: 10% off!").hide().fadeIn(300);
+    } else {
+      discountRate = 0;
+      $("#promoNote").css("color", "#c0392b").text("Invalid promo code.").hide().fadeIn(300);
+    }
+    renderCart();
+  });
+
+  // ---------- CHECKOUT ----------
+  $("#checkout").on("click", function () {
+    if (!cart.length) return toast("Your cart is empty!");
+    var lines = $.map(cart, function (c) {
+      return c.qty + " x " + c.name + (c.size !== "-" ? " (" + c.size + ")" : "") + " &mdash; " + rm(c.price * c.qty);
+    });
+    var orderNo = Math.floor(1000 + Math.random() * 9000);
+    $("#receipt").hide().html(
+      "<b>Order #" + orderNo + " confirmed!</b><br><br>" + lines.join("<br>") +
+      "<br><br><b>Total paid: " + $("#total").text() + "</b><br>Thank you, please wait at the counter."
+    ).slideDown(400);
+    cart = [];
+    renderCart();
+  });
+
+  $("#clearCart").on("click", function () {
+    $("#cart li").fadeOut(200);
+    setTimeout(function () { cart = []; renderCart(); $("#receipt").slideUp(200); }, 220);
+  });
+
+  renderCart();
+});
+</script>
+</body>
+</html>
