@@ -34,6 +34,7 @@
       7: { title: "JOBSHEET 7 - JavaScript Event", description: "Malaysian Heritage photo gallery (Set 3) using JavaScript events: clicking a thumbnail swaps the featured image, and hovering fades its caption in and out, with external Lab8.js.", live: "JS7/", pdf: "JS7/js7.pdf", added: "2026-10-10T02:45:00Z" },
       8: { title: "JOBSHEET 8 - JavaScript Client Side Validation", description: "Event Registration form (Set 3) with JavaScript client-side validation: fields highlight on focus, and empty required fields are flagged in red on submit, with external Lab9.js.", live: "JS8/", pdf: "JS8/js8.pdf", added: "2026-10-10T03:00:00Z" },
       9: { title: "JOBSHEET 9 - JavaScript Functions", description: "Nature Art Collection shopping cart (Set 3) built with external JavaScript files: data arrays in data.js, reusable functions in function.js and Lab7.js calculating subtotal, tax, shipping and grand total.", live: "JS9/", pdf: "JS9/js9.pdf", added: "2026-10-10T03:10:00Z" },
+      12: { title: "JOBSHEET 12 - jQuery AJAX", description: "Load Course Information (Set 3) using jQuery AJAX: clicking the button loads course.txt into #div1 with $.ajax() without reloading the page, using jQuery 3.5.1.", live: "JS12/", pdf: "JS12/js12.pdf", added: "2026-10-10T03:20:00Z" },
     },
     redza: {},
   };
