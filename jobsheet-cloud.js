@@ -28,6 +28,7 @@
       1: { title: "JOBSHEET 1 - HTML5", description: "Laman web restoran Rossi dengan menu, gambar hiasan dalaman dan hidangan istimewa.", live: "JS1/", pdf: "JS1/js1.pdf" },
       2: { title: "JOBSHEET 2 - HTML5", description: "Laman web perbandingan kamera digital dengan spesifikasi dan maklumat jenama.", live: "JS2/", pdf: "JS2/js2.pdf" },
       3: { title: "JOBSHEET 3 - HTML5", description: "Laman web maklumat kolej dengan pautan navigasi dan butiran kursus.", live: "JS3/", pdf: "JS3/js3.pdf" },
+      4: { title: "JOBSHEET 4 - CSS3", description: "Laman web galeri seni The Scream oleh Edvard Munch, digayakan dengan external CSS3.", live: "JS4/", pdf: "JS4/js4.pdf" },
     },
     redza: {},
   };
