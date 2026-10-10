@@ -25,11 +25,12 @@
   // Rekod cloud untuk round yang sama akan menggantikan ini.
   const REPO_ROUNDS = {
     zakri: {
-      1: { title: "JOBSHEET 1 - HTML5", description: "Laman web restoran Rossi dengan menu, gambar hiasan dalaman dan hidangan istimewa.", live: "JS1/", pdf: "JS1/js1.pdf" },
-      2: { title: "JOBSHEET 2 - HTML5", description: "Laman web perbandingan kamera digital dengan spesifikasi dan maklumat jenama.", live: "JS2/", pdf: "JS2/js2.pdf" },
-      3: { title: "JOBSHEET 3 - HTML5", description: "Laman web maklumat kolej dengan pautan navigasi dan butiran kursus.", live: "JS3/", pdf: "JS3/js3.pdf" },
-      4: { title: "JOBSHEET 4 - CSS3", description: "Laman web galeri seni The Scream oleh Edvard Munch, digayakan dengan external CSS3.", live: "JS4/", pdf: "JS4/js4.pdf", added: "2026-10-10T01:45:00Z" },
-      5: { title: "JOBSHEET 5 - CSS3", description: "Borang pendaftaran artis Creative Arts Store (Set 3), digayakan dengan external CSS3 styleLab5.css.", live: "JS5/", pdf: "JS5/js5.pdf", added: "2026-10-10T02:10:00Z" },
+      1: { title: "JOBSHEET 1 - HTML5", description: "Rossi restaurant website with a menu, interior photos and signature dishes.", live: "JS1/", pdf: "JS1/js1.pdf" },
+      2: { title: "JOBSHEET 2 - HTML5", description: "Digital camera comparison website with specifications and brand information.", live: "JS2/", pdf: "JS2/js2.pdf" },
+      3: { title: "JOBSHEET 3 - HTML5", description: "College information website with navigation links and course details.", live: "JS3/", pdf: "JS3/js3.pdf" },
+      4: { title: "JOBSHEET 4 - CSS3", description: "Art gallery website for The Scream by Edvard Munch, styled with external CSS3.", live: "JS4/", pdf: "JS4/js4.pdf", added: "2026-10-10T01:45:00Z" },
+      5: { title: "JOBSHEET 5 - CSS3", description: "Creative Arts Store artist registration form (Set 3), styled with external CSS3 styleLab5.css.", live: "JS5/", pdf: "JS5/js5.pdf", added: "2026-10-10T02:10:00Z" },
+      6: { title: "JOBSHEET 6 - CSS3", description: "Campus Library mobile web page (Set 3) with a gradient header, rounded navigation lists and a library illustration, styled with external CSS3 style.css.", live: "JS6/", pdf: "JS6/js6.pdf", added: "2026-10-10T02:20:00Z" },
     },
     redza: {},
   };
@@ -108,7 +109,7 @@
     if (!res.ok) {
       const j = await res.json().catch(() => ({}));
       const msg = j.message || `SAVE FAILED (${res.status})`;
-      throw new Error(/column/i.test(msg) ? "Database belum dikemas kini. Jalankan supabase-setup.sql dalam Supabase SQL Editor." : msg);
+      throw new Error(/column/i.test(msg) ? "Database not updated yet. Run supabase-setup.sql in the Supabase SQL Editor." : msg);
     }
   }
 
@@ -122,17 +123,17 @@
   const fileToB64 = (file) => new Promise((ok, bad) => {
     const r = new FileReader();
     r.onload = () => ok(String(r.result).split(",")[1] || "");
-    r.onerror = () => bad(new Error(`TAK DAPAT BACA ${file.name}`));
+    r.onerror = () => bad(new Error(`CANNOT READ ${file.name}`));
     r.readAsDataURL(file);
   });
   async function ghError(res) {
     const j = await res.json().catch(() => ({}));
     return new Error({
-      401: "TOKEN GITHUB TAK SAH / TAMAT TEMPOH",
-      403: "TOKEN TIADA KEBENARAN CONTENTS: READ AND WRITE",
-      404: "REPO TAK JUMPA / TOKEN TIADA AKSES REPO NI",
-      409: "CONFLICT · CUBA LAGI",
-      422: j.message || "GITHUB TOLAK FAIL NI",
+      401: "GITHUB TOKEN INVALID / EXPIRED",
+      403: "TOKEN LACKS CONTENTS: READ AND WRITE PERMISSION",
+      404: "REPO NOT FOUND / TOKEN HAS NO ACCESS TO THIS REPO",
+      409: "CONFLICT · TRY AGAIN",
+      422: j.message || "GITHUB REJECTED THIS FILE",
     }[res.status] || `GITHUB ${res.status}: ${j.message || "ERROR"}`);
   }
   async function ghPut(path, file, message) {
@@ -151,7 +152,7 @@
     const res = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}`, { headers: ghHeaders(token), cache: "no-store" });
     if (!res.ok) throw await ghError(res);
     const j = await res.json();
-    if (!j.permissions || !j.permissions.push) throw new Error("TOKEN NI READ-ONLY · PERLU CONTENTS: READ AND WRITE");
+    if (!j.permissions || !j.permissions.push) throw new Error("TOKEN IS READ-ONLY · NEEDS CONTENTS: READ AND WRITE");
   }
 
   let ghPanel;
@@ -181,7 +182,7 @@
       ghPanel.addEventListener("click", (e) => { if (e.target === ghPanel || e.target.closest(".preview-close")) close(); });
       ghPanel.querySelector("[data-gh-unlink]").addEventListener("click", () => {
         try { localStorage.removeItem(GH_KEY); } catch {}
-        ghPanel.querySelector("[data-gh-status]").textContent = "GITHUB DIPUTUSKAN · UPLOAD KE CLOUD SAHAJA";
+        ghPanel.querySelector("[data-gh-status]").textContent = "GITHUB DISCONNECTED · UPLOADING TO CLOUD ONLY";
         ghPanel.querySelector("input").value = "";
         ghPanel._onChange?.();
       });
@@ -323,7 +324,7 @@
         <div class="back-head"><span>${rec ? `ROUND ${pad(rec.round)} · EDIT` : "NEW ROUND · UPLOAD"}</span><div class="back-tools">${rec ? `<button class="job-delete" type="button" data-delete="${rec.round}">DELETE</button>` : ""}<button class="job-close" type="button" data-flip="${id}" aria-label="Close panel">✕</button></div></div>
         ${rec ? "" : `<label class="job-field"><span>ROUND NO.</span><input type="number" name="round" min="1" max="${TOTAL}" value="${nextRound()}" required></label>`}
         <label class="job-field"><span>TITLE</span><input type="text" name="title" maxlength="80" value="${esc(rec ? rec.title : "")}" placeholder="JOBSHEET 4 - CSS3" required></label>
-        <label class="job-field"><span>DESCRIPTION</span><textarea name="description" rows="2" maxlength="240" placeholder="Apa yang dibina dalam jobsheet ni">${esc(rec ? rec.description : "")}</textarea></label>
+        <label class="job-field"><span>DESCRIPTION</span><textarea name="description" rows="2" maxlength="240" placeholder="What was built in this jobsheet">${esc(rec ? rec.description : "")}</textarea></label>
         <label class="job-field job-file"><span>PDF REPORT${rec && rec.pdf ? " · REPLACE" : ""}</span><input type="file" name="pdf" accept="application/pdf,.pdf"></label>
         <label class="job-field job-file"><span>HTML FILE${rec && hasLive(rec) ? " · REPLACE" : ""}</span><input type="file" name="html" accept=".html,.htm,text/html"></label>
         <label class="job-field job-file"><span>CSS / JS / IMAGES</span><input type="file" name="extras" multiple></label>
@@ -363,7 +364,7 @@
           <div class="job-face job-front">
             <div class="job-top"><span class="job-number">ROUND ${pad(nextRound())}</span><span class="job-state">OPEN SLOT</span></div>
             <h3>NEW<br>ROUND +</h3>
-            <p class="job-desc">Upload PDF dan HTML untuk round seterusnya.</p>
+            <p class="job-desc">Upload the PDF and HTML for the next round.</p>
             <button class="detail-toggle" type="button" data-flip="new">UPLOAD ROUND <span>&#8635;</span></button>
             <div class="job-actions"><span>${rounds.length} / ${TOTAL} CLEARED</span><span>READY</span></div>
           </div>
@@ -424,8 +425,8 @@
       const del = e.target.closest("[data-delete]");
       if (del) {
         const round = Number(del.dataset.delete);
-        if (!cloudOk) return alert("CLOUD OFFLINE · TAK BOLEH PADAM");
-        if (!confirm(`Padam ROUND ${pad(round)} dari senarai? Kau boleh upload semula nanti.`)) return;
+        if (!cloudOk) return alert("CLOUD OFFLINE · CANNOT DELETE");
+        if (!confirm(`Delete ROUND ${pad(round)} from the list? You can upload it again later.`)) return;
         const status = del.closest("form").querySelector("[data-status]");
         try {
           del.disabled = true;
@@ -462,12 +463,12 @@
 
       if (!(round >= 1 && round <= TOTAL)) return say(`ROUND MESTI 1 HINGGA ${TOTAL}`);
       if (!title) return say("MASUKKAN TITLE");
-      if (pdf && !/\.pdf$/i.test(pdf.name)) return say("PDF SAHAJA UNTUK REPORT");
+      if (pdf && !/\.pdf$/i.test(pdf.name)) return say("PDF ONLY FOR THE REPORT");
       if (html && !/\.html?$/i.test(html.name)) return say("HTML FILE MESTI .html / .htm");
-      if (live && /\s/.test(live)) return say("LIVE URL TAK BOLEH ADA RUANG KOSONG");
+      if (live && /\s/.test(live)) return say("LIVE URL CANNOT CONTAIN SPACES");
       if ([pdf, html, ...extras].some((x) => x && x.size > 50 * 1024 * 1024)) return say("SETIAP FAIL MAKSIMUM 50MB");
-      if (isNew && !pdf && !html && !live) return say("PILIH PDF, HTML ATAU LIVE URL");
-      if (isNew && rec && !confirm(`ROUND ${pad(round)} dah wujud. Ganti?`)) return;
+      if (isNew && !pdf && !html && !live) return say("CHOOSE A PDF, HTML OR LIVE URL");
+      if (isNew && rec && !confirm(`ROUND ${pad(round)} already exists. Replace it?`)) return;
 
       const toGithub = Boolean(ghToken());
       const base = toGithub ? `${GH.folder[player] || ""}JS${round}` : `${player}/round-${pad(round)}`;
@@ -518,7 +519,7 @@
         }
         say("SAVING ROUND…");
         await upsertRound(player, round, patch);
-        say(toGithub && (pdf || html || extras.length) ? "SAVED ✓ · GITHUB PAGES LIVE DALAM ±1 MINIT" : "ROUND SAVED ✓");
+        say(toGithub && (pdf || html || extras.length) ? "SAVED ✓ · GITHUB PAGES LIVE IN ±1 MINUTE" : "ROUND SAVED ✓");
         button.textContent = "SAVED ✓";
         button.classList.add("is-saved");
         flipped = null;
