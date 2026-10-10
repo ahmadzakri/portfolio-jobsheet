@@ -32,6 +32,7 @@
       5: { title: "JOBSHEET 5 - CSS3", description: "Creative Arts Store artist registration form (Set 3), styled with external CSS3 styleLab5.css.", live: "JS5/", pdf: "JS5/js5.pdf", added: "2026-10-10T02:10:00Z" },
       6: { title: "JOBSHEET 6 - CSS3", description: "Campus Library mobile web page (Set 3) with a gradient header, rounded navigation lists and a library illustration, styled with external CSS3 style.css.", live: "JS6/", pdf: "JS6/js6.pdf", added: "2026-10-10T02:20:00Z" },
       7: { title: "JOBSHEET 7 - JavaScript Event", description: "Malaysian Heritage photo gallery (Set 3) using JavaScript events: clicking a thumbnail swaps the featured image, and hovering fades its caption in and out, with external Lab8.js.", live: "JS7/", pdf: "JS7/js7.pdf", added: "2026-10-10T02:45:00Z" },
+      8: { title: "JOBSHEET 8 - JavaScript Client Side Validation", description: "Event Registration form (Set 3) with JavaScript client-side validation: fields highlight on focus, and empty required fields are flagged in red on submit, with external Lab9.js.", live: "JS8/", pdf: "JS8/js8.pdf", added: "2026-10-10T03:00:00Z" },
     },
     redza: {},
   };
