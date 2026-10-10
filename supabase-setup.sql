@@ -1,4 +1,4 @@
--- KING OF JOBSHEETS · jalankan SEKALI dalam Supabase > SQL Editor
+-- KING OF JOBSHEETS · run ONCE in Supabase > SQL Editor
 -- Selamat dijalankan berulang kali.
 
 create table if not exists public.jobsheets (
@@ -26,7 +26,7 @@ create policy "kof_insert" on public.jobsheets for insert to anon with check (tr
 create policy "kof_update" on public.jobsheets for update to anon using (true) with check (true);
 create policy "kof_delete" on public.jobsheets for delete to anon using (true);
 
--- Bucket awam, terima semua jenis fail (PDF, HTML, CSS, gambar), maks 50MB
+-- Public bucket, accepts all file types (PDF, HTML, CSS, images), max 50MB
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 values ('jobsheets', 'jobsheets', true, 52428800, null)
 on conflict (id) do update set public = true, file_size_limit = 52428800, allowed_mime_types = null;

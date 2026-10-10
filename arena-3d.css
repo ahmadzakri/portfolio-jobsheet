@@ -3,7 +3,7 @@
    Dimuatkan SELEPAS style.css — semua rule di sini menimpa asal.
    ============================================================ */
 
-/* ---------- 1. INTRO: VS SCREEN MASUK DARI DALAM SKRIN ---------- */
+/* ---------- 1. INTRO: VS SCREEN ENTERING FROM INSIDE THE SCREEN ---------- */
 .intro { perspective: 1500px; perspective-origin: 50% 45%; }
 .intro-versus { transform-style: preserve-3d; }
 
@@ -23,7 +23,7 @@
   to   { opacity: 1; transform: translate(-50%,-50%) translateZ(0) rotateX(0deg); }
 }
 
-/* ---------- 2. REVEAL: SEKSYEN NAIK DARI KEDALAMAN ---------- */
+/* ---------- 2. REVEAL: SECTIONS RISING FROM DEPTH ---------- */
 .reveal { opacity: 0; transform: perspective(1600px) translate3d(0,60px,-260px) rotateX(-16deg); transition: opacity .9s, transform 1.05s cubic-bezier(.16,.84,.28,1); }
 .reveal.in-view { opacity: 1; transform: perspective(1600px) translate3d(0,0,0) rotateX(0deg); }
 .fighter-redza.reveal { transition-delay: .14s; }

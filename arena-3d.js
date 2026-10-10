@@ -1,6 +1,6 @@
 /* ============================================================
    KING OF JOBSHEETS · 3D ENGINE
-   Tilt ikut tetikus + parallax berlapis untuk hero.
+   Mouse-follow tilt + layered parallax for the hero.
    ============================================================ */
 (() => {
   const fine = matchMedia("(hover:hover) and (pointer:fine)").matches;

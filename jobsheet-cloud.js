@@ -1,7 +1,7 @@
 /* ============================================================
    KING OF JOBSHEETS · CLOUD ROUNDS
-   Senarai jobsheet setiap fighter + upload PDF / HTML ke Supabase.
-   Hanya round yang wujud akan dipaparkan.
+   Jobsheet list for each fighter + PDF / HTML upload to Supabase.
+   Only rounds that exist are shown.
    ============================================================ */
 (() => {
   const SUPABASE_URL = "https://orkdjfswoszxhhnxrfjv.supabase.co";
@@ -11,7 +11,7 @@
   const TOTAL = 24;
   const PLAYERS = ["zakri", "redza"];
 
-  // Upload terus ke repo GitHub bila token disambung (butang GITHUB).
+  // Upload straight to the GitHub repo when a token is connected (GITHUB button).
   const GH = {
     owner: "ahmadzakri",
     repo: "portfolio-jobsheet",
@@ -21,8 +21,8 @@
   const GH_KEY = "kof-github-token";
   const ghToken = () => { try { return localStorage.getItem(GH_KEY) || ""; } catch { return ""; } };
 
-  // Jobsheet yang memang ada dalam repo GitHub (dipapar walaupun cloud offline).
-  // Rekod cloud untuk round yang sama akan menggantikan ini.
+  // Jobsheets that already exist in the GitHub repo (shown even if the cloud is offline).
+  // A cloud record for the same round replaces these.
   const REPO_ROUNDS = {
     zakri: {
       1: { title: "JOBSHEET 1 - HTML5", description: "Rossi restaurant website with a menu, interior photos and signature dishes.", live: "JS1/", pdf: "JS1/js1.pdf" },
@@ -31,6 +31,7 @@
       4: { title: "JOBSHEET 4 - CSS3", description: "Art gallery website for The Scream by Edvard Munch, styled with external CSS3.", live: "JS4/", pdf: "JS4/js4.pdf", added: "2026-10-10T01:45:00Z" },
       5: { title: "JOBSHEET 5 - CSS3", description: "Creative Arts Store artist registration form (Set 3), styled with external CSS3 styleLab5.css.", live: "JS5/", pdf: "JS5/js5.pdf", added: "2026-10-10T02:10:00Z" },
       6: { title: "JOBSHEET 6 - CSS3", description: "Campus Library mobile web page (Set 3) with a gradient header, rounded navigation lists and a library illustration, styled with external CSS3 style.css.", live: "JS6/", pdf: "JS6/js6.pdf", added: "2026-10-10T02:20:00Z" },
+      7: { title: "JOBSHEET 7 - JavaScript Event", description: "Malaysian Heritage photo gallery (Set 3) using JavaScript events: clicking a thumbnail swaps the featured image, and hovering fades its caption in and out, with external Lab8.js.", live: "JS7/", pdf: "JS7/js7.pdf", added: "2026-10-10T02:45:00Z" },
     },
     redza: {},
   };
@@ -67,12 +68,12 @@
       const round = Number(row.round);
       if (!(round >= 1 && round <= TOTAL)) return;
       if (row.completed === false) {
-        // rekod padam lama tak boleh sorok round repo yang ditambah selepasnya
+        // an old delete record must not hide a repo round added after it
         const repo = map[round];
         if (repo && repo.added && (!row.updated_at || new Date(row.updated_at) < new Date(repo.added))) return;
         delete map[round]; return;
       } // round dipadam
-      if (!row.pdf_url && !row.live_url && !row.html_path) return; // rekod lama tanpa fail
+      if (!row.pdf_url && !row.live_url && !row.html_path) return; // old record without files
       const base = map[round] || {};
       map[round] = {
         round,
@@ -168,7 +169,7 @@
             <button class="preview-close" type="button" aria-label="Close">✕</button>
           </div>
           <div class="gh-body">
-            <p>Bila disambung, setiap upload terus masuk ke repo GitHub (folder <b>JS4/</b>, <b>JS5/</b>…). Token disimpan dalam browser ni sahaja.</p>
+            <p>Once connected, every upload goes straight into the GitHub repo (folders <b>JS4/</b>, <b>JS5/</b>…). The token is stored in this browser only.</p>
             <label class="job-field"><span>FINE-GRAINED TOKEN</span><input type="password" name="token" autocomplete="off" spellcheck="false" placeholder="github_pat_…"></label>
             <div class="upload-status" data-gh-status></div>
             <div class="gh-actions">
@@ -260,7 +261,7 @@
       return;
     }
     if (rec.htmlPath) {
-      // Supabase hantar HTML sebagai teks biasa, jadi kita render sendiri dengan <base> ke folder asal.
+      // Supabase serves HTML as plain text, so we render it ourselves with a <base> pointing to the original folder.
       const url = publicUrl(rec.htmlPath);
       const folder = url.slice(0, url.lastIndexOf("/") + 1);
       msg.textContent = "LOADING…";
@@ -461,12 +462,12 @@
       const html = f.html.files[0];
       const extras = [...f.extras.files];
 
-      if (!(round >= 1 && round <= TOTAL)) return say(`ROUND MESTI 1 HINGGA ${TOTAL}`);
-      if (!title) return say("MASUKKAN TITLE");
+      if (!(round >= 1 && round <= TOTAL)) return say(`ROUND MUST BE 1 TO ${TOTAL}`);
+      if (!title) return say("ENTER A TITLE");
       if (pdf && !/\.pdf$/i.test(pdf.name)) return say("PDF ONLY FOR THE REPORT");
-      if (html && !/\.html?$/i.test(html.name)) return say("HTML FILE MESTI .html / .htm");
+      if (html && !/\.html?$/i.test(html.name)) return say("HTML FILE MUST BE .html / .htm");
       if (live && /\s/.test(live)) return say("LIVE URL CANNOT CONTAIN SPACES");
-      if ([pdf, html, ...extras].some((x) => x && x.size > 50 * 1024 * 1024)) return say("SETIAP FAIL MAKSIMUM 50MB");
+      if ([pdf, html, ...extras].some((x) => x && x.size > 50 * 1024 * 1024)) return say("EACH FILE MAX 50MB");
       if (isNew && !pdf && !html && !live) return say("CHOOSE A PDF, HTML OR LIVE URL");
       if (isNew && rec && !confirm(`ROUND ${pad(round)} already exists. Replace it?`)) return;
 
@@ -475,7 +476,7 @@
       const commitMsg = `${player.toUpperCase()} · Jobsheet ${round}: ${title}`;
       const patch = { title, description, completed: true, live_url: live || null };
       if (!isNew || rec) {
-        // kekalkan fail lama yang tak diganti
+        // keep old files that were not replaced
         if (rec && rec.pdf) patch.pdf_url = rec.pdf;
         if (rec && rec.htmlPath) patch.html_path = rec.htmlPath;
       }
@@ -483,7 +484,7 @@
         button.disabled = true;
         button.textContent = "UPLOADING…";
         if (toGithub) {
-          // fail masuk repo: JS4/index.html, JS4/js4.pdf, JS4/style.css …
+          // files go into the repo: JS4/index.html, JS4/js4.pdf, JS4/style.css …
           if (pdf) {
             say("PUSH PDF → GITHUB…");
             await ghPut(`${base}/js${round}.pdf`, pdf, commitMsg);

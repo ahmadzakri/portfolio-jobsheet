@@ -81,7 +81,7 @@ function initSound() {
   if (!control || !music) return;
   music.volume = .28;
 
-  // Sambung lagu dari kedudukan terakhir bila tukar halaman.
+  // Resume the music from its last position when switching pages.
   const resumeAt = Number(sessionStorage.getItem("arena-music-time") || 0);
   if (resumeAt > 0) {
     music.addEventListener("loadedmetadata", () => {
